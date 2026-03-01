@@ -17,4 +17,6 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     // Найти преподавателя по логину пользователя
     @Query("SELECT t FROM Teacher t WHERE t.user.login = :login")
     Optional<Teacher> findByUserLogin(@Param("login") String login);
+    // В TeacherRepository.java
+
 }
