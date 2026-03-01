@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.math.BigDecimal;
 
 @Service
 public class ControlService {
@@ -180,6 +181,16 @@ public class ControlService {
     }
 
     /**
+     * Получить нормативы из номеров
+     */
+    private List<Standard> getStandardsFromNumbers(List<Short> numbers) {
+        return numbers.stream()
+                .map(num -> standardRepository.findFirstByNumber(num).orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Получить результаты контроля для курсанта
      */
     public Page<ControlResultDto> getControlResultsForCadet(
@@ -226,16 +237,6 @@ public class ControlService {
         );
     }
 
-    /**
-     * ИСПРАВЛЕНО: получаем нормативы по номерам
-     */
-    private List<Standard> getStandardsFromNumbers(List<Short> numbers) {
-        return numbers.stream()
-                .map(num -> standardRepository.findFirstByNumber(num).orElse(null))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
-
     private ControlDto convertToDto(Control control) {
         Long studentsCount = controlResultRepository.countByControlId(control.getId());
         Long passedCount = controlResultRepository.countPassedByControlId(control.getId());
@@ -280,7 +281,6 @@ public class ControlService {
      */
     public List<ControlSummaryDto> getControlFullResults(Long controlId, UserDetails userDetails) {
 
-        // 1. Проверяем доступ
         if (userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CADET"))) {
             Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("Курсант не найден"));
@@ -300,19 +300,15 @@ public class ControlService {
             }
         }
 
-        // 2. Получаем контроль и группу
         Control control = controlRepository.findById(controlId)
                 .orElseThrow(() -> new RuntimeException("Контроль не найден"));
 
-        // 3. Получаем ВСЕХ курсантов группы
         List<Cadet> allCadets = cadetRepository.findByGroupId(control.getGroup().getId());
 
-        // 4. Получаем существующие результаты
         List<ControlResult> results = controlResultRepository.findByControlId(controlId);
         Map<Long, List<ControlResult>> resultsByCadet = results.stream()
                 .collect(Collectors.groupingBy(r -> r.getCadet().getUserId()));
 
-        // 5. Получаем итоговые оценки
         List<ControlSummary> summaries = controlSummaryRepository.findByControlId(controlId);
         Map<Long, Short> finalMarks = summaries.stream()
                 .collect(Collectors.toMap(
@@ -321,13 +317,11 @@ public class ControlService {
                         (existing, replacement) -> existing
                 ));
 
-        // 6. Получаем статусы из результатов (даже если нет оценок)
         Map<Long, String> statusMap = new HashMap<>();
         for (ControlResult result : results) {
             statusMap.put(result.getCadet().getUserId(), result.getStatus());
         }
 
-        // 7. Формируем DTO для ВСЕХ курсантов
         List<ControlSummaryDto> result = new ArrayList<>();
 
         for (Cadet cadet : allCadets) {
@@ -340,9 +334,7 @@ public class ControlService {
             List<ControlResult> cadetResults = resultsByCadet.get(cadet.getUserId());
 
             if (cadetResults != null && !cadetResults.isEmpty()) {
-                // У курсанта есть результаты (даже если пустой массив rawResults, но статус есть)
-                String status = cadetResults.get(0).getStatus();
-                dto.setStatus(status != null ? status : "Не явился");
+                dto.setStatus(cadetResults.get(0).getStatus());
 
                 List<StandardResultDto> standards = cadetResults.stream()
                         .map(r -> new StandardResultDto(
@@ -355,7 +347,6 @@ public class ControlService {
 
                 dto.setFinalMark(finalMarks.get(cadet.getUserId()));
             } else {
-                // У курсанта совсем нет записей в control_results
                 String status = statusMap.get(cadet.getUserId());
                 dto.setStatus(status != null ? status : "Не явился");
                 dto.setStandards(new ArrayList<>());
@@ -365,14 +356,13 @@ public class ControlService {
             result.add(dto);
         }
 
-        // 8. Сортируем по ФИО
         result.sort(Comparator.comparing(ControlSummaryDto::getFullName));
 
         return result;
     }
 
     /**
-     * ИСПРАВЛЕНО: Отправка результатов по НОМЕРАМ нормативов
+     * Отправка результатов по номерам нормативов
      */
     @Transactional
     public void submitRawResults(UserDetails userDetails, SubmitRawResultsRequest request) {
@@ -387,7 +377,6 @@ public class ControlService {
             throw new RuntimeException("Нет доступа к этому контролю");
         }
 
-        // Получаем ожидаемые НОМЕРА нормативов
         List<Short> expectedNumbers = controlStandardRepository.findStandardNumbersByControlId(control.getId());
 
         if (expectedNumbers.isEmpty()) {
@@ -402,9 +391,7 @@ public class ControlService {
             Cadet cadet = cadetRepository.findById(cadetRaw.getCadetId())
                     .orElseThrow(() -> new RuntimeException("Курсант не найден"));
 
-            // ЕСЛИ КУРСАНТ ОТСУТСТВУЕТ (пустой rawResults)
             if (cadetRaw.getRawResults() == null || cadetRaw.getRawResults().isEmpty()) {
-                // СОЗДАЕМ ЗАПИСЬ ДЛЯ КАЖДОГО НОРМАТИВА С MARK = null
                 for (Short number : expectedNumbers) {
                     Standard standard = standardRepository.findFirstByNumber(number)
                             .orElseThrow(() -> new RuntimeException("Норматив с номером " + number + " не найден"));
@@ -413,7 +400,7 @@ public class ControlService {
                     statusResult.setControl(control);
                     statusResult.setCadet(cadet);
                     statusResult.setStatus(cadetRaw.getStatus() != null ? cadetRaw.getStatus() : "Не явился");
-                    statusResult.setStandard(standard); // ← обязательно ставим норматив!
+                    statusResult.setStandard(standard);
                     statusResult.setMark(null);
 
                     ControlResult saved = controlResultRepository.save(statusResult);
@@ -422,18 +409,15 @@ public class ControlService {
                 continue;
             }
 
-            // ЕСЛИ КУРСАНТ ПРИСУТСТВУЕТ
             coursesByCadet.put(cadet.getUserId(), cadet.getCourse().intValue());
             List<ControlResult> cadetResults = new ArrayList<>();
             Set<Short> submittedNumbers = new HashSet<>();
 
             for (StandardRawResultDto raw : cadetRaw.getRawResults()) {
-                // Ищем норматив по НОМЕРУ
                 Standard standard = standardRepository.findFirstByNumber(raw.getStandardNumber())
                         .orElseThrow(() -> new RuntimeException(
                                 "Норматив с номером " + raw.getStandardNumber() + " не найден"));
 
-                // Проверяем, что номер есть в списке ожидаемых
                 if (!expectedNumbers.contains(raw.getStandardNumber())) {
                     throw new RuntimeException(
                             String.format("Норматив с номером %d не входит в список нормативов контроля %d",
@@ -441,7 +425,6 @@ public class ControlService {
                     );
                 }
 
-                // Проверка на дубликаты
                 if (submittedNumbers.contains(raw.getStandardNumber())) {
                     throw new RuntimeException("Дублирование норматива с номером " + raw.getStandardNumber() +
                             " для курсанта " + cadet.getUserId());
@@ -467,7 +450,6 @@ public class ControlService {
                 allResults.add(saved);
             }
 
-            // Проверяем, что все номера присланы
             if (submittedNumbers.size() != expectedNumbers.size()) {
                 throw new RuntimeException(
                         String.format("Для курсанта %d прислано %d нормативов, ожидалось %d",
@@ -478,7 +460,6 @@ public class ControlService {
             resultsByCadet.put(cadet.getUserId(), cadetResults);
         }
 
-        // Рассчитываем итоговые оценки ТОЛЬКО для присутствующих
         Map<Long, Short> finalMarks = markCalculatorService.calculateFinalMarks(
                 resultsByCadet, coursesByCadet);
 
@@ -500,8 +481,9 @@ public class ControlService {
             controlSummaryRepository.save(summary);
         }
     }
+
     /**
-     * ИСПРАВЛЕНО: Создание контроля с НОМЕРАМИ нормативов
+     * Создание контроля с номерами нормативов
      */
     @Transactional
     public ControlDto createControl(UserDetails userDetails, CreateControlRequest request) {
@@ -520,7 +502,6 @@ public class ControlService {
             throw new RuntimeException("Необходимо указать хотя бы один номер норматива");
         }
 
-        // Проверяем, что все номера существуют
         for (Short number : request.getStandardNumbers()) {
             if (!standardRepository.findFirstByNumber(number).isPresent()) {
                 throw new RuntimeException("Норматив с номером " + number + " не найден");
@@ -535,7 +516,6 @@ public class ControlService {
 
         Control savedControl = controlRepository.save(control);
 
-        // Сохраняем номера нормативов
         for (Short number : request.getStandardNumbers()) {
             ControlStandard controlStandard = new ControlStandard(savedControl, number);
             controlStandardRepository.save(controlStandard);
@@ -559,5 +539,113 @@ public class ControlService {
         }
 
         return convertToDto(savedControl);
+    }
+
+    /**
+     * Редактирование результатов контроля
+     */
+    @Transactional
+    public void updateControlResults(UserDetails userDetails, UpdateControlResultsRequest request) {
+
+        Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Преподаиель не найден"));
+
+        Control control = controlRepository.findById(request.getControlId())
+                .orElseThrow(() -> new RuntimeException("Контроль не найден"));
+
+        if (!control.getGroup().getUniversity().getId().equals(teacher.getUniversity().getId())) {
+            throw new RuntimeException("Нет доступа к этому контролю");
+        }
+
+        Map<Long, List<ControlResult>> updatedResultsByCadet = new HashMap<>();
+        Map<Long, Integer> coursesByCadet = new HashMap<>();
+
+        for (UpdateControlResultRequest update : request.getUpdates()) {
+            Standard standard = standardRepository.findFirstByNumber(update.getStandardNumber())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Норматив с номером " + update.getStandardNumber() + " не найден"));
+
+            ControlResult result = controlResultRepository
+                    .findByControlIdAndCadet_UserIdAndStandardId(
+                            request.getControlId(),
+                            update.getCadetId(),
+                            standard.getId()
+                    ).orElseThrow(() -> new RuntimeException(
+                            String.format("Результат для курсанта %d и норматива %d не найден",
+                                    update.getCadetId(), update.getStandardNumber())
+                    ));
+
+            Cadet cadet = result.getCadet();
+
+            if (update.getStatus() != null) {
+                result.setStatus(update.getStatus());
+            }
+
+            if (update.getTimeValue() != null || update.getIntValue() != null) {
+                BigDecimal timeValue = update.getTimeValue() != null ? update.getTimeValue() : null;
+                Integer intValue = update.getIntValue() != null ? update.getIntValue() : null;
+
+                Short newMark = evaluationService.evaluateMark(
+                        standard,
+                        timeValue,
+                        intValue,
+                        cadet.getCourse().intValue()
+                );
+
+                result.setMark(newMark);
+            }
+
+            controlResultRepository.save(result);
+
+            // Собираем все результаты этого курсанта
+            List<ControlResult> cadetResults = controlResultRepository
+                    .findByControlIdAndCadet_UserId(control.getId(), cadet.getUserId());
+
+            // Только те, у которых есть оценка (присутствуют)
+            List<ControlResult> presentResults = cadetResults.stream()
+                    .filter(r -> r.getMark() != null)
+                    .collect(Collectors.toList());
+
+            if (!presentResults.isEmpty()) {
+                updatedResultsByCadet.put(cadet.getUserId(), presentResults);
+                coursesByCadet.put(cadet.getUserId(), cadet.getCourse().intValue());
+            }
+        }
+
+        // Пересчитываем итоговые оценки ТОЛЬКО для присутствующих
+        if (!updatedResultsByCadet.isEmpty()) {
+            Map<Long, Short> finalMarks = markCalculatorService.calculateFinalMarks(
+                    updatedResultsByCadet, coursesByCadet);
+
+            for (Map.Entry<Long, Short> entry : finalMarks.entrySet()) {
+                Long cadetId = entry.getKey();
+                Short finalMark = entry.getValue();
+
+                // Пытаемся найти существующую итоговую оценку
+                Optional<ControlSummary> existingSummary = controlSummaryRepository
+                        .findByControlIdAndCadetId(control.getId(), cadetId);
+
+                if (existingSummary.isPresent()) {
+                    // Обновляем существующую
+                    ControlSummary summary = existingSummary.get();
+                    summary.setFinalMark(finalMark);
+                    controlSummaryRepository.save(summary);
+                } else {
+                    // Создаем новую, если ее нет
+                    Cadet cadet = cadetRepository.findById(cadetId)
+                            .orElseThrow(() -> new RuntimeException("Курсант не найден"));
+
+                    ControlSummary summary = new ControlSummary();
+                    summary.setId(new ControlSummaryId(control.getId(), cadetId));
+                    summary.setControl(control);
+                    summary.setCadet(cadet);
+                    summary.setCadetMilitaryRank(cadet.getMilitaryRank());
+                    summary.setCadetPost(cadet.getPost());
+                    summary.setFinalMark(finalMark);
+
+                    controlSummaryRepository.save(summary);
+                }
+            }
+        }
     }
 }

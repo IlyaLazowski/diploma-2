@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
-
+import com.fakel.dto.UpdateControlResultsRequest;
 @RestController
 @RequestMapping("/api")
 public class GroupController {
@@ -194,6 +194,24 @@ public class GroupController {
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody CreateControlRequest request) {
         return controlService.createControl(userDetails, request);
+    }
+
+    /**
+     * PUT /api/groups/controls/{controlId}/results
+     * Редактирование результатов контроля
+     */
+    @PutMapping("/groups/controls/{controlId}/results")
+    @PreAuthorize("hasRole('TEACHER')")
+    public void updateControlResults(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long controlId,
+            @Valid @RequestBody UpdateControlResultsRequest request) {
+
+        if (!controlId.equals(request.getControlId())) {
+            throw new RuntimeException("ID контроля не совпадает");
+        }
+
+        controlService.updateControlResults(userDetails, request);
     }
 
 
