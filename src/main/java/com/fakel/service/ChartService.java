@@ -10,6 +10,8 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -21,6 +23,8 @@ import java.util.HashMap;
 
 @Service
 public class ChartService {
+
+    private static final Logger log = LoggerFactory.getLogger(ChartService.class);
 
     private static final Color[] COLORS = {
             new Color(0, 102, 204),    // синий
@@ -39,35 +43,45 @@ public class ChartService {
             String exerciseName,
             Map<String, Map<LocalDate, Double>> dataByParameter) {
 
+        log.info("Создание графика упражнения: {}", exerciseName);
+        log.debug("Количество параметров: {}", dataByParameter != null ? dataByParameter.size() : 0);
+
         // Проверка входных данных
         if (exerciseName == null || exerciseName.trim().isEmpty()) {
+            log.warn("Попытка создания графика с пустым названием упражнения");
             throw new IllegalArgumentException("Название упражнения не может быть пустым");
         }
 
         if (dataByParameter == null || dataByParameter.isEmpty()) {
+            log.warn("Попытка создания графика с пустыми данными для упражнения: {}", exerciseName);
             throw new IllegalArgumentException("Данные для графика не могут быть пустыми");
         }
 
         TimeSeriesCollection dataset = new TimeSeriesCollection();
+        int validSeriesCount = 0;
 
         for (Map.Entry<String, Map<LocalDate, Double>> entry : dataByParameter.entrySet()) {
             String parameterName = entry.getKey();
             Map<LocalDate, Double> values = entry.getValue();
 
             if (parameterName == null || parameterName.trim().isEmpty()) {
-                continue; // пропускаем параметры без имени
-            }
-
-            if (values == null || values.isEmpty()) {
+                log.debug("Пропуск параметра с пустым именем");
                 continue;
             }
 
+            if (values == null || values.isEmpty()) {
+                log.debug("Параметр '{}' не содержит данных, пропускаем", parameterName);
+                continue;
+            }
+
+            log.debug("Обработка параметра '{}' с {} точками данных", parameterName, values.size());
             TimeSeries series = new TimeSeries(parameterName.trim());
 
             values.forEach((date, value) -> {
                 if (date != null && value != null) {
                     // Проверка даты (не должна быть в будущем для графиков)
                     if (date.isAfter(LocalDate.now())) {
+                        log.warn("Дата в будущем для параметра '{}': {}", parameterName, date);
                         throw new IllegalArgumentException("Дата не может быть в будущем: " + date);
                     }
 
@@ -81,12 +95,17 @@ public class ChartService {
 
             if (series.getItemCount() > 0) {
                 dataset.addSeries(series);
+                validSeriesCount++;
+                log.debug("Добавлен параметр '{}' с {} точками", parameterName, series.getItemCount());
             }
         }
 
         if (dataset.getSeriesCount() == 0) {
+            log.error("Нет данных для построения графика упражнения: {}", exerciseName);
             throw new IllegalArgumentException("Нет данных для построения графика");
         }
+
+        log.info("Создание графика с {} сериями данных", validSeriesCount);
 
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
                 exerciseName.trim(),
@@ -144,26 +163,38 @@ public class ChartService {
                         new StandardXYItemLabelGenerator("{2}", new DecimalFormat("#.#"), new DecimalFormat("#.#")));
                 renderer.setSeriesItemLabelsVisible(i, true);
                 renderer.setSeriesItemLabelFont(i, new Font("Arial", Font.PLAIN, 9));
+                log.debug("Добавлены подписи для серии {}", dataset.getSeries(i).getKey());
             }
         }
 
         plot.setRenderer(renderer);
+        log.info("График для упражнения '{}' успешно создан", exerciseName);
 
         return chart;
     }
 
     public JFreeChart createWeightChart(Map<LocalDate, Double> weightData) {
+        log.info("Создание графика динамики веса");
+        log.debug("Количество записей о весе: {}", weightData != null ? weightData.size() : 0);
+
         if (weightData == null || weightData.isEmpty()) {
+            log.warn("Попытка создания графика веса с пустыми данными");
             throw new IllegalArgumentException("Данные о весе не могут быть пустыми");
         }
 
         TimeSeries series = new TimeSeries("Вес (кг)");
+        int validPoints = 0;
 
-        weightData.forEach((date, weight) -> {
+        for (Map.Entry<LocalDate, Double> entry : weightData.entrySet()) {
+            LocalDate date = entry.getKey();
+            Double weight = entry.getValue();
+
             if (date == null) {
+                log.warn("Пропуск записи с null датой");
                 throw new IllegalArgumentException("Дата не может быть null");
             }
             if (date.isAfter(LocalDate.now())) {
+                log.warn("Дата в будущем: {}", date);
                 throw new IllegalArgumentException("Дата не может быть в будущем: " + date);
             }
             if (weight != null) {
@@ -173,12 +204,16 @@ public class ChartService {
                         date.getMonthValue(),
                         date.getYear()
                 ), formattedWeight);
+                validPoints++;
             }
-        });
+        }
 
         if (series.getItemCount() == 0) {
+            log.error("Нет данных о весе для построения графика");
             throw new IllegalArgumentException("Нет данных о весе для построения графика");
         }
+
+        log.info("Создание графика веса с {} точками данных", validPoints);
 
         TimeSeriesCollection dataset = new TimeSeriesCollection();
         dataset.addSeries(series);
@@ -227,6 +262,7 @@ public class ChartService {
             } else {
                 rangeAxis.setRange(minValue - 1, maxValue + 1);
             }
+            log.debug("Диапазон оси Y: {} - {}", minValue, maxValue);
         }
 
         // Настройка линий и точек
@@ -242,9 +278,11 @@ public class ChartService {
                     new StandardXYItemLabelGenerator("{2}", new DecimalFormat("#.#"), new DecimalFormat("#.#")));
             renderer.setSeriesItemLabelsVisible(0, true);
             renderer.setSeriesItemLabelFont(0, new Font("Arial", Font.PLAIN, 9));
+            log.debug("Добавлены подписи для {} точек", series.getItemCount());
         }
 
         plot.setRenderer(renderer);
+        log.info("График динамики веса успешно создан");
 
         return chart;
     }
@@ -272,11 +310,15 @@ public class ChartService {
             } else {
                 rangeAxis.setRange(minValue - 1, maxValue + 1);
             }
+            log.debug("Автонастройка диапазона Y: {} - {}", minValue, maxValue);
         }
     }
 
     private String getYAxisLabel(Iterable<String> parameterNames) {
-        if (parameterNames == null) return "Значение";
+        if (parameterNames == null) {
+            log.debug("Нет имен параметров, используется 'Значение'");
+            return "Значение";
+        }
 
         // Пытаемся определить общий тип параметров
         Map<String, Integer> paramTypes = new HashMap<>();
@@ -287,10 +329,12 @@ public class ChartService {
         }
 
         if (paramTypes.size() == 1) {
-            // Если все параметры одного типа, используем его как подпись
-            return parameterNames.iterator().next();
+            String label = parameterNames.iterator().next();
+            log.debug("Подпись оси Y: {}", label);
+            return label;
         }
 
+        log.debug("Несколько типов параметров, используется 'Значение'");
         return "Значение";
     }
 }
