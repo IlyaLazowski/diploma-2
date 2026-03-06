@@ -18,7 +18,7 @@ public class CreateControlRequest {
 
     @NotNull(message = "Список номеров нормативов обязателен")
     @Size(min = 1, message = "Должен быть хотя бы один норматив")
-    private List<Short> standardNumbers;  // ← ТОЛЬКО НОМЕРА!
+    private List<Short> standardNumbers;
 
     private List<Long> inspectorIds;
 

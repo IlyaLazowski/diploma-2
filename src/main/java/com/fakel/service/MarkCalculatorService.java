@@ -4,6 +4,7 @@ import com.fakel.model.ControlResult;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -13,8 +14,35 @@ public class MarkCalculatorService {
      * Расчёт итоговой оценки по трём нормативам
      */
     public Short calculateFinalMark(List<Short> marks, Integer course) {
+        // Проверка входных данных
+        if (marks == null) {
+            throw new IllegalArgumentException("Список оценок не может быть null");
+        }
+
         if (marks.size() != 3) {
-            throw new RuntimeException("Должно быть ровно 3 оценки");
+            throw new IllegalArgumentException("Должно быть ровно 3 оценки, получено: " + marks.size());
+        }
+
+        // Проверка, что все оценки не null
+        for (int i = 0; i < marks.size(); i++) {
+            if (marks.get(i) == null) {
+                throw new IllegalArgumentException("Оценка под индексом " + i + " не может быть null");
+            }
+        }
+
+        // Проверка, что оценки в допустимом диапазоне (0-5)
+        for (Short mark : marks) {
+            if (mark < 0 || mark > 5) {
+                throw new IllegalArgumentException("Оценка " + mark + " вне допустимого диапазона (0-5)");
+            }
+        }
+
+        if (course == null) {
+            throw new IllegalArgumentException("Курс не может быть null");
+        }
+
+        if (course < 1 || course > 5) {
+            throw new IllegalArgumentException("Курс должен быть от 1 до 5, получено: " + course);
         }
 
         // Сортируем для удобства сравнения
@@ -53,7 +81,8 @@ public class MarkCalculatorService {
         if (m3 == 2 && m2 == 2 && m1 == 2) return 1;
 
         // Неизвестная комбинация
-        return null;
+        throw new IllegalArgumentException("Невозможно рассчитать итоговую оценку для комбинации: " +
+                marks.stream().map(String::valueOf).collect(Collectors.joining(", ")));
     }
 
     /**
@@ -63,15 +92,42 @@ public class MarkCalculatorService {
             Map<Long, List<ControlResult>> resultsByCadet,
             Map<Long, Integer> coursesByCadet) {
 
+        // Проверка входных данных
+        if (resultsByCadet == null) {
+            throw new IllegalArgumentException("Результаты по курсантам не могут быть null");
+        }
+
+        if (coursesByCadet == null) {
+            throw new IllegalArgumentException("Информация о курсах не может быть null");
+        }
+
         return resultsByCadet.entrySet().stream()
-                .filter(entry -> entry.getValue().size() == 3)  // только те, у кого 3 оценки
+                .filter(entry -> {
+                    // Проверяем, что у курсанта ровно 3 результата
+                    if (entry.getValue() == null) {
+                        return false;
+                    }
+
+                    // Проверяем, что все результаты имеют оценки
+                    boolean allHaveMarks = entry.getValue().stream()
+                            .allMatch(r -> r != null && r.getMark() != null);
+
+                    return entry.getValue().size() == 3 && allHaveMarks;
+                })
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> {
                             List<Short> marks = entry.getValue().stream()
                                     .map(ControlResult::getMark)
                                     .collect(Collectors.toList());
+
                             Integer course = coursesByCadet.get(entry.getKey());
+
+                            // Проверяем, что курс найден
+                            if (course == null) {
+                                throw new IllegalArgumentException("Не найден курс для курсанта с ID: " + entry.getKey());
+                            }
+
                             return calculateFinalMark(marks, course);
                         }
                 ));

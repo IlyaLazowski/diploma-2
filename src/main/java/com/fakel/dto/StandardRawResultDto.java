@@ -2,11 +2,11 @@ package com.fakel.dto;
 
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.List;
 
 public class StandardRawResultDto {
+
     @NotNull(message = "Номер норматива обязателен")
-    private Short standardNumber;  // ← НОМЕР, а не ID!
+    private Short standardNumber;
 
     private BigDecimal timeValue;
     private Integer intValue;

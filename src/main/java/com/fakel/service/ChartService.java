@@ -39,20 +39,38 @@ public class ChartService {
             String exerciseName,
             Map<String, Map<LocalDate, Double>> dataByParameter) {
 
+        // Проверка входных данных
+        if (exerciseName == null || exerciseName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Название упражнения не может быть пустым");
+        }
+
+        if (dataByParameter == null || dataByParameter.isEmpty()) {
+            throw new IllegalArgumentException("Данные для графика не могут быть пустыми");
+        }
+
         TimeSeriesCollection dataset = new TimeSeriesCollection();
 
         for (Map.Entry<String, Map<LocalDate, Double>> entry : dataByParameter.entrySet()) {
             String parameterName = entry.getKey();
             Map<LocalDate, Double> values = entry.getValue();
 
+            if (parameterName == null || parameterName.trim().isEmpty()) {
+                continue; // пропускаем параметры без имени
+            }
+
             if (values == null || values.isEmpty()) {
                 continue;
             }
 
-            TimeSeries series = new TimeSeries(parameterName);
+            TimeSeries series = new TimeSeries(parameterName.trim());
 
             values.forEach((date, value) -> {
-                if (value != null) {
+                if (date != null && value != null) {
+                    // Проверка даты (не должна быть в будущем для графиков)
+                    if (date.isAfter(LocalDate.now())) {
+                        throw new IllegalArgumentException("Дата не может быть в будущем: " + date);
+                    }
+
                     series.add(new Day(
                             date.getDayOfMonth(),
                             date.getMonthValue(),
@@ -67,11 +85,11 @@ public class ChartService {
         }
 
         if (dataset.getSeriesCount() == 0) {
-            return null;
+            throw new IllegalArgumentException("Нет данных для построения графика");
         }
 
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                exerciseName,
+                exerciseName.trim(),
                 "Дата",
                 getYAxisLabel(dataByParameter.keySet()),
                 dataset,
@@ -136,12 +154,18 @@ public class ChartService {
 
     public JFreeChart createWeightChart(Map<LocalDate, Double> weightData) {
         if (weightData == null || weightData.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException("Данные о весе не могут быть пустыми");
         }
 
         TimeSeries series = new TimeSeries("Вес (кг)");
 
         weightData.forEach((date, weight) -> {
+            if (date == null) {
+                throw new IllegalArgumentException("Дата не может быть null");
+            }
+            if (date.isAfter(LocalDate.now())) {
+                throw new IllegalArgumentException("Дата не может быть в будущем: " + date);
+            }
             if (weight != null) {
                 double formattedWeight = Math.round(weight * 10) / 10.0;
                 series.add(new Day(
@@ -153,7 +177,7 @@ public class ChartService {
         });
 
         if (series.getItemCount() == 0) {
-            return null;
+            throw new IllegalArgumentException("Нет данных о весе для построения графика");
         }
 
         TimeSeriesCollection dataset = new TimeSeriesCollection();
@@ -257,7 +281,9 @@ public class ChartService {
         // Пытаемся определить общий тип параметров
         Map<String, Integer> paramTypes = new HashMap<>();
         for (String name : parameterNames) {
-            paramTypes.put(name, 1);
+            if (name != null) {
+                paramTypes.put(name, 1);
+            }
         }
 
         if (paramTypes.size() == 1) {

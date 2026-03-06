@@ -62,6 +62,19 @@ public class ControlService {
             String type,
             Pageable pageable) {
 
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (groupId == null || groupId <= 0) {
+            throw new IllegalArgumentException("ID группы должен быть положительным числом");
+        }
+
+        if (dateFrom != null && dateTo != null && dateFrom.isAfter(dateTo)) {
+            throw new IllegalArgumentException("Дата начала не может быть позже даты окончания");
+        }
+
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
 
@@ -77,6 +90,15 @@ public class ControlService {
     }
 
     public ControlDto getControlById(Long controlId, UserDetails userDetails) {
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (controlId == null || controlId <= 0) {
+            throw new IllegalArgumentException("ID контроля должен быть положительным числом");
+        }
+
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
 
@@ -98,6 +120,15 @@ public class ControlService {
             LocalDate dateTo,
             String type,
             Pageable pageable) {
+
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (dateFrom != null && dateTo != null && dateFrom.isAfter(dateTo)) {
+            throw new IllegalArgumentException("Дата начала не может быть позже даты окончания");
+        }
 
         Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Курсант не найден"));
@@ -125,6 +156,15 @@ public class ControlService {
     }
 
     public ControlDto getCadetControlById(UserDetails userDetails, Long controlId) {
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (controlId == null || controlId <= 0) {
+            throw new IllegalArgumentException("ID контроля должен быть положительным числом");
+        }
+
         Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Курсант не найден"));
 
@@ -197,6 +237,15 @@ public class ControlService {
             UserDetails userDetails,
             Long controlId,
             Pageable pageable) {
+
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (controlId == null || controlId <= 0) {
+            throw new IllegalArgumentException("ID контроля должен быть положительным числом");
+        }
 
         Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Курсант не найден"));
@@ -280,6 +329,15 @@ public class ControlService {
      * Получить полные результаты контроля
      */
     public List<ControlSummaryDto> getControlFullResults(Long controlId, UserDetails userDetails) {
+
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (controlId == null || controlId <= 0) {
+            throw new IllegalArgumentException("ID контроля должен быть положительным числом");
+        }
 
         if (userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CADET"))) {
             Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
@@ -367,6 +425,23 @@ public class ControlService {
     @Transactional
     public void submitRawResults(UserDetails userDetails, SubmitRawResultsRequest request) {
 
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (request == null) {
+            throw new IllegalArgumentException("Запрос не может быть пустым");
+        }
+
+        if (request.getControlId() == null || request.getControlId() <= 0) {
+            throw new IllegalArgumentException("ID контроля должен быть положительным числом");
+        }
+
+        if (request.getResults() == null || request.getResults().isEmpty()) {
+            throw new IllegalArgumentException("Список результатов не может быть пустым");
+        }
+
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
 
@@ -383,14 +458,31 @@ public class ControlService {
             throw new RuntimeException("Для контроля не указаны нормативы");
         }
 
+        // Список допустимых статусов
+        List<String> validStatuses = Arrays.asList(
+                "Присутствует", "Болен", "Командировка", "Гауптвахта"
+        );
+
         List<ControlResult> allResults = new ArrayList<>();
         Map<Long, List<ControlResult>> resultsByCadet = new HashMap<>();
         Map<Long, Integer> coursesByCadet = new HashMap<>();
 
         for (CadetRawResultDto cadetRaw : request.getResults()) {
-            Cadet cadet = cadetRepository.findById(cadetRaw.getCadetId())
-                    .orElseThrow(() -> new RuntimeException("Курсант не найден"));
 
+            if (cadetRaw.getCadetId() == null || cadetRaw.getCadetId() <= 0) {
+                throw new IllegalArgumentException("ID курсанта должен быть положительным числом");
+            }
+
+            Cadet cadet = cadetRepository.findById(cadetRaw.getCadetId())
+                    .orElseThrow(() -> new RuntimeException("Курсант с ID " + cadetRaw.getCadetId() + " не найден"));
+
+            // Проверка статуса
+            if (cadetRaw.getStatus() != null && !validStatuses.contains(cadetRaw.getStatus())) {
+                throw new IllegalArgumentException("Некорректный статус: " + cadetRaw.getStatus() +
+                        ". Допустимые: " + validStatuses);
+            }
+
+            // Если нет результатов - создаем записи со статусом
             if (cadetRaw.getRawResults() == null || cadetRaw.getRawResults().isEmpty()) {
                 for (Short number : expectedNumbers) {
                     Standard standard = standardRepository.findFirstByNumber(number)
@@ -414,6 +506,12 @@ public class ControlService {
             Set<Short> submittedNumbers = new HashSet<>();
 
             for (StandardRawResultDto raw : cadetRaw.getRawResults()) {
+
+                // Проверка номера норматива
+                if (raw.getStandardNumber() == null || raw.getStandardNumber() <= 0 || raw.getStandardNumber() > 10000) {
+                    throw new IllegalArgumentException("Номер норматива должен быть от 1 до 10000");
+                }
+
                 Standard standard = standardRepository.findFirstByNumber(raw.getStandardNumber())
                         .orElseThrow(() -> new RuntimeException(
                                 "Норматив с номером " + raw.getStandardNumber() + " не найден"));
@@ -425,11 +523,18 @@ public class ControlService {
                     );
                 }
 
-                if (submittedNumbers.contains(raw.getStandardNumber())) {
-                    throw new RuntimeException("Дублирование норматива с номером " + raw.getStandardNumber() +
+                // Проверка на дубликаты
+                if (!submittedNumbers.add(raw.getStandardNumber())) {
+                    throw new RuntimeException("Обнаружен дубликат норматива с номером " + raw.getStandardNumber() +
                             " для курсанта " + cadet.getUserId());
                 }
-                submittedNumbers.add(raw.getStandardNumber());
+
+                // Проверка значений (одно из двух должно быть)
+                if (raw.getTimeValue() == null && raw.getIntValue() == null) {
+                    throw new IllegalArgumentException(
+                            "Для норматива " + raw.getStandardNumber() + " должно быть указано либо время, либо количество"
+                    );
+                }
 
                 Short mark = evaluationService.evaluateMark(
                         standard,
@@ -450,6 +555,7 @@ public class ControlService {
                 allResults.add(saved);
             }
 
+            // Проверка количества нормативов
             if (submittedNumbers.size() != expectedNumbers.size()) {
                 throw new RuntimeException(
                         String.format("Для курсанта %d прислано %d нормативов, ожидалось %d",
@@ -488,8 +594,22 @@ public class ControlService {
     @Transactional
     public ControlDto createControl(UserDetails userDetails, CreateControlRequest request) {
 
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (request == null) {
+            throw new IllegalArgumentException("Запрос не может быть пустым");
+        }
+
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
+
+        // Проверка ID группы
+        if (request.getGroupId() == null || request.getGroupId() <= 0) {
+            throw new IllegalArgumentException("ID группы должен быть положительным числом");
+        }
 
         Group group = groupRepository.findById(request.getGroupId())
                 .orElseThrow(() -> new RuntimeException("Группа не найдена"));
@@ -498,13 +618,42 @@ public class ControlService {
             throw new RuntimeException("Нет доступа к этой группе");
         }
 
+        // Проверка типа контроля
+        List<String> validTypes = Arrays.asList(
+                "Контрольное занятие", "Зачет", "Экзамен", "Смотр-конкурс"
+        );
+        if (!validTypes.contains(request.getType())) {
+            throw new IllegalArgumentException("Некорректный тип контроля. Допустимые: " + validTypes);
+        }
+
+        // Проверка даты
+        if (request.getDate() == null) {
+            throw new IllegalArgumentException("Дата контроля не может быть пустой");
+        }
+
+        // Проверка номеров нормативов
         if (request.getStandardNumbers() == null || request.getStandardNumbers().isEmpty()) {
-            throw new RuntimeException("Необходимо указать хотя бы один номер норматива");
+            throw new IllegalArgumentException("Необходимо указать хотя бы один номер норматива");
         }
 
         for (Short number : request.getStandardNumbers()) {
+            if (number == null || number <= 0 || number > 10000) {
+                throw new IllegalArgumentException("Номер норматива должен быть от 1 до 10000");
+            }
             if (!standardRepository.findFirstByNumber(number).isPresent()) {
                 throw new RuntimeException("Норматив с номером " + number + " не найден");
+            }
+        }
+
+        // Проверка инспекторов
+        if (request.getInspectorIds() != null) {
+            for (Long inspectorId : request.getInspectorIds()) {
+                if (inspectorId == null || inspectorId <= 0) {
+                    throw new IllegalArgumentException("ID инспектора должен быть положительным числом");
+                }
+                if (!teacherRepository.existsById(inspectorId)) {
+                    throw new RuntimeException("Инспектор с ID " + inspectorId + " не найден");
+                }
             }
         }
 
@@ -547,8 +696,25 @@ public class ControlService {
     @Transactional
     public void updateControlResults(UserDetails userDetails, UpdateControlResultsRequest request) {
 
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (request == null) {
+            throw new IllegalArgumentException("Запрос не может быть пустым");
+        }
+
+        if (request.getControlId() == null || request.getControlId() <= 0) {
+            throw new IllegalArgumentException("ID контроля должен быть положительным числом");
+        }
+
+        if (request.getUpdates() == null || request.getUpdates().isEmpty()) {
+            throw new IllegalArgumentException("Список обновлений не может быть пустым");
+        }
+
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Преподаиель не найден"));
+                .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
 
         Control control = controlRepository.findById(request.getControlId())
                 .orElseThrow(() -> new RuntimeException("Контроль не найден"));
@@ -561,6 +727,16 @@ public class ControlService {
         Map<Long, Integer> coursesByCadet = new HashMap<>();
 
         for (UpdateControlResultRequest update : request.getUpdates()) {
+
+            // Проверка входных данных обновления
+            if (update.getCadetId() == null || update.getCadetId() <= 0) {
+                throw new IllegalArgumentException("ID курсанта должен быть положительным числом");
+            }
+
+            if (update.getStandardNumber() == null || update.getStandardNumber() <= 0 || update.getStandardNumber() > 10000) {
+                throw new IllegalArgumentException("Номер норматива должен быть от 1 до 10000");
+            }
+
             Standard standard = standardRepository.findFirstByNumber(update.getStandardNumber())
                     .orElseThrow(() -> new RuntimeException(
                             "Норматив с номером " + update.getStandardNumber() + " не найден"));
@@ -577,11 +753,25 @@ public class ControlService {
 
             Cadet cadet = result.getCadet();
 
+            // Проверка статуса
             if (update.getStatus() != null) {
+                List<String> validStatuses = Arrays.asList(
+                        "Присутствует", "Болен", "Командировка", "Гауптвахта"
+                );
+                if (!validStatuses.contains(update.getStatus())) {
+                    throw new IllegalArgumentException("Некорректный статус: " + update.getStatus());
+                }
                 result.setStatus(update.getStatus());
             }
 
             if (update.getTimeValue() != null || update.getIntValue() != null) {
+                // Проверка что одно из значений передано
+                if (update.getTimeValue() == null && update.getIntValue() == null) {
+                    throw new IllegalArgumentException(
+                            "Должно быть указано либо время, либо количество"
+                    );
+                }
+
                 BigDecimal timeValue = update.getTimeValue() != null ? update.getTimeValue() : null;
                 Integer intValue = update.getIntValue() != null ? update.getIntValue() : null;
 

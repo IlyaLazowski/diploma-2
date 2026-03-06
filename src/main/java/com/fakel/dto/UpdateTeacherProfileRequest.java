@@ -11,11 +11,10 @@ public class UpdateTeacherProfileRequest {
     @Pattern(regexp = "^\\+375\\d{9}$", message = "Телефон должен быть в формате +375XXXXXXXXX")
     private String phoneNumber;
 
-    private String qualification; // ученая степень/звание
+    private String qualification;
 
-    private String post; // должность
+    private String post;
 
-    // Геттеры и сеттеры
     public String getMail() { return mail; }
     public void setMail(String mail) { this.mail = mail; }
 

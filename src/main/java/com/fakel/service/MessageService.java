@@ -14,8 +14,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;          // ← добавить
-import java.util.HashMap;       // ← добавить
+import java.util.Map;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +38,35 @@ public class MessageService {
     @Transactional
     public MessageDto sendMessage(UserDetails userDetails, SendMessageRequest request) {
 
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (request == null) {
+            throw new IllegalArgumentException("Запрос не может быть пустым");
+        }
+
+        if (request.getRecipientId() == null || request.getRecipientId() <= 0) {
+            throw new IllegalArgumentException("ID получателя должен быть положительным числом");
+        }
+
+        if (request.getTopic() == null || request.getTopic().trim().isEmpty()) {
+            throw new IllegalArgumentException("Тема сообщения не может быть пустой");
+        }
+
+        if (request.getTopic().length() > 256) {
+            throw new IllegalArgumentException("Тема сообщения не может быть длиннее 256 символов");
+        }
+
+        if (request.getText() == null || request.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("Текст сообщения не может быть пустым");
+        }
+
+        if (request.getText().length() > 10000) {
+            throw new IllegalArgumentException("Текст сообщения не может быть длиннее 10000 символов");
+        }
+
         // Проверяем, что отправитель - преподаватель
         Teacher sender = teacherRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Только преподаватель может отправлять сообщения"));
@@ -50,8 +79,8 @@ public class MessageService {
         Message message = new Message();
         message.setSender(sender.getUser());
         message.setRecipient(recipient);
-        message.setTopic(request.getTopic());
-        message.setText(request.getText());
+        message.setTopic(request.getTopic().trim());
+        message.setText(request.getText().trim());
         message.setSentAt(LocalDateTime.now());
         message.setIsReading(false);
 
@@ -67,6 +96,19 @@ public class MessageService {
                                           LocalDate dateTo,
                                           Boolean unreadOnly,
                                           Pageable pageable) {
+
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (pageable == null) {
+            throw new IllegalArgumentException("Параметры пагинации не могут быть пустыми");
+        }
+
+        if (dateFrom != null && dateTo != null && dateFrom.isAfter(dateTo)) {
+            throw new IllegalArgumentException("Дата начала не может быть позже даты окончания");
+        }
 
         Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Курсант не найден"));
@@ -94,6 +136,15 @@ public class MessageService {
     @Transactional(readOnly = true)
     public MessageDto getMessageById(UserDetails userDetails, Long messageId) {
 
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (messageId == null || messageId <= 0) {
+            throw new IllegalArgumentException("ID сообщения должен быть положительным числом");
+        }
+
         Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Курсант не найден"));
 
@@ -112,6 +163,29 @@ public class MessageService {
     @Transactional
     public void updateMessagesStatus(UserDetails userDetails, UpdateMessageStatusRequest request) {
 
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (request == null) {
+            throw new IllegalArgumentException("Запрос не может быть пустым");
+        }
+
+        if (request.getMessageIds() == null || request.getMessageIds().isEmpty()) {
+            throw new IllegalArgumentException("Список ID сообщений не может быть пустым");
+        }
+
+        for (Long id : request.getMessageIds()) {
+            if (id == null || id <= 0) {
+                throw new IllegalArgumentException("ID сообщения должен быть положительным числом");
+            }
+        }
+
+        if (request.getIsReading() == null) {
+            throw new IllegalArgumentException("Статус прочтения не может быть null");
+        }
+
         Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Курсант не найден"));
 
@@ -127,6 +201,25 @@ public class MessageService {
 
     @Transactional
     public void deleteMessages(UserDetails userDetails, DeleteMessagesRequest request) {
+
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (request == null) {
+            throw new IllegalArgumentException("Запрос не может быть пустым");
+        }
+
+        if (request.getMessageIds() == null || request.getMessageIds().isEmpty()) {
+            throw new IllegalArgumentException("Список ID сообщений не может быть пустым");
+        }
+
+        for (Long id : request.getMessageIds()) {
+            if (id == null || id <= 0) {
+                throw new IllegalArgumentException("ID сообщения должен быть положительным числом");
+            }
+        }
 
         Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Курсант не найден"));
@@ -146,6 +239,19 @@ public class MessageService {
                                             LocalDate dateTo,
                                             Boolean showOnlyUnread,
                                             Pageable pageable) {
+
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (pageable == null) {
+            throw new IllegalArgumentException("Параметры пагинации не могут быть пустыми");
+        }
+
+        if (dateFrom != null && dateTo != null && dateFrom.isAfter(dateTo)) {
+            throw new IllegalArgumentException("Дата начала не может быть позже даты окончания");
+        }
 
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
@@ -179,6 +285,25 @@ public class MessageService {
     @Transactional
     public void deleteSentMessages(UserDetails userDetails, DeleteMessagesRequest request) {
 
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (request == null) {
+            throw new IllegalArgumentException("Запрос не может быть пустым");
+        }
+
+        if (request.getMessageIds() == null || request.getMessageIds().isEmpty()) {
+            throw new IllegalArgumentException("Список ID сообщений не может быть пустым");
+        }
+
+        for (Long id : request.getMessageIds()) {
+            if (id == null || id <= 0) {
+                throw new IllegalArgumentException("ID сообщения должен быть положительным числом");
+            }
+        }
+
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
 
@@ -191,6 +316,15 @@ public class MessageService {
 
     @Transactional(readOnly = true)
     public Boolean isMessageRead(Long messageId, UserDetails userDetails) {
+
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (messageId == null || messageId <= 0) {
+            throw new IllegalArgumentException("ID сообщения должен быть положительным числом");
+        }
 
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
@@ -208,6 +342,11 @@ public class MessageService {
     @Transactional(readOnly = true)
     public Map<String, Object> getSentMessagesStats(UserDetails userDetails) {
 
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
 
@@ -219,7 +358,7 @@ public class MessageService {
         stats.put("totalSent", totalSent);
         stats.put("read", readCount);
         stats.put("unread", unreadCount);
-        stats.put("readPercentage", totalSent > 0 ? (readCount * 100 / totalSent) : 0);
+        stats.put("readPercentage", totalSent != null && totalSent > 0 ? (readCount * 100 / totalSent) : 0);
 
         return stats;
     }
@@ -228,6 +367,12 @@ public class MessageService {
 
     @Transactional(readOnly = true)
     public Long getUnreadCount(UserDetails userDetails) {
+
+        // Проверка входных данных
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
         Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Курсант не найден"));
 
@@ -237,6 +382,10 @@ public class MessageService {
     // ============= ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ =============
 
     private MessageDto convertToDto(Message message) {
+        if (message == null) {
+            return null;
+        }
+
         String senderName = message.getSender().getLastName() + " " +
                 message.getSender().getFirstName() + " " +
                 (message.getSender().getPatronymic() != null ? message.getSender().getPatronymic() : "");
@@ -248,9 +397,9 @@ public class MessageService {
         return new MessageDto(
                 message.getId(),
                 message.getSender().getId(),
-                senderName,
+                senderName.trim(),
                 message.getRecipient().getId(),
-                recipientName,
+                recipientName.trim(),
                 message.getTopic(),
                 message.getText(),
                 message.getSentAt(),

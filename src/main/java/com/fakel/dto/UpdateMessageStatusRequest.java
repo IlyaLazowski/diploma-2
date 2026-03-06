@@ -11,7 +11,6 @@ public class UpdateMessageStatusRequest {
     @NotNull(message = "Статус прочтения обязателен")
     private Boolean isReading;
 
-    // Геттеры и сеттеры
     public List<Long> getMessageIds() {
         return messageIds;
     }

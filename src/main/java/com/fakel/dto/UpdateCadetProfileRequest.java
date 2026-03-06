@@ -12,9 +12,8 @@ public class UpdateCadetProfileRequest {
     @Pattern(regexp = "^\\+375\\d{9}$", message = "Телефон должен быть в формате +375XXXXXXXXX")
     private String phoneNumber;
 
-    private BigDecimal weight; // вес в кг
+    private BigDecimal weight;
 
-    // Геттеры и сеттеры
     public String getMail() { return mail; }
     public void setMail(String mail) { this.mail = mail; }
 

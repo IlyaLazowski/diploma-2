@@ -35,4 +35,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     // Поиск по тексту
     Page<Article> findByTextContainingIgnoreCase(String text, Pageable pageable);
+
+    boolean existsByTopic(String topic);
 }
