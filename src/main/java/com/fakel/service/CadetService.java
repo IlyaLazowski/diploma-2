@@ -38,6 +38,12 @@ public class CadetService {
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
         }
 
+        // ⚠️ ВАЖНО: сначала проверяем request!
+        if (request == null) {
+            log.warn("Попытка обновления профиля с null request");
+            throw new IllegalArgumentException("Запрос не может быть пустым");
+        }
+
         Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> {
                     log.warn("Курсант не найден: {}", userDetails.getUsername());
@@ -53,59 +59,74 @@ public class CadetService {
         // Обновление email
         if (request.getMail() != null && !request.getMail().trim().isEmpty()) {
             String newMail = request.getMail().trim();
-            log.debug("Запрос на обновление email: {} -> {}", user.getMail(), newMail);
 
-            // Проверка длины email
-            if (newMail.length() > 256) {
-                log.warn("Email слишком длинный: {} символов", newMail.length());
-                throw new IllegalArgumentException("Email не может быть длиннее 256 символов");
-            }
+            // ⚠️ Проверяем, действительно ли изменился email
+            if (!newMail.equals(user.getMail())) {
+                log.debug("Запрос на обновление email: {} -> {}", user.getMail(), newMail);
 
-            if (!newMail.equals(user.getMail()) &&
-                    userRepository.existsByMail(newMail)) {
-                log.warn("Email уже используется: {}", newMail);
-                throw new RuntimeException("Email уже используется");
+                // Проверка длины email
+                if (newMail.length() > 256) {
+                    log.warn("Email слишком длинный: {} символов", newMail.length());
+                    throw new IllegalArgumentException("Email не может быть длиннее 256 символов");
+                }
+
+                if (userRepository.existsByMail(newMail)) {
+                    log.warn("Email уже используется: {}", newMail);
+                    throw new RuntimeException("Email уже используется");
+                }
+                user.setMail(newMail);
+                updated = true;
+                log.info("Email курсанта {} обновлен на {}", userDetails.getUsername(), newMail);
+            } else {
+                log.debug("Email не изменился");
             }
-            user.setMail(newMail);
-            updated = true;
-            log.info("Email курсанта {} обновлен на {}", userDetails.getUsername(), newMail);
         }
 
         // Обновление телефона
         if (request.getPhoneNumber() != null && !request.getPhoneNumber().trim().isEmpty()) {
             String newPhone = request.getPhoneNumber().trim();
-            log.debug("Запрос на обновление телефона: {} -> {}", user.getPhoneNumber(), newPhone);
 
-            if (!newPhone.equals(user.getPhoneNumber()) &&
-                    userRepository.existsByPhoneNumber(newPhone)) {
-                log.warn("Телефон уже используется: {}", newPhone);
-                throw new RuntimeException("Телефон уже используется");
+            // ⚠️ Проверяем, действительно ли изменился телефон
+            if (!newPhone.equals(user.getPhoneNumber())) {
+                log.debug("Запрос на обновление телефона: {} -> {}", user.getPhoneNumber(), newPhone);
+
+                if (userRepository.existsByPhoneNumber(newPhone)) {
+                    log.warn("Телефон уже используется: {}", newPhone);
+                    throw new RuntimeException("Телефон уже используется");
+                }
+                user.setPhoneNumber(newPhone);
+                updated = true;
+                log.info("Телефон курсанта {} обновлен на {}", userDetails.getUsername(), newPhone);
+            } else {
+                log.debug("Телефон не изменился");
             }
-            user.setPhoneNumber(newPhone);
-            updated = true;
-            log.info("Телефон курсанта {} обновлен на {}", userDetails.getUsername(), newPhone);
         }
 
         // Обновление веса
         if (request.getWeight() != null) {
-            log.debug("Запрос на обновление веса: {} -> {}", cadet.getWeight(), request.getWeight());
+            // ⚠️ Проверяем, действительно ли изменился вес
+            if (!request.getWeight().equals(cadet.getWeight())) {
+                log.debug("Запрос на обновление веса: {} -> {}", cadet.getWeight(), request.getWeight());
 
-            // Проверка диапазона веса согласно БД (30-180 кг)
-            if (request.getWeight().compareTo(new BigDecimal("30")) < 0 ||
-                    request.getWeight().compareTo(new BigDecimal("180")) > 0) {
-                log.warn("Вес вне допустимого диапазона: {}", request.getWeight());
-                throw new IllegalArgumentException("Вес должен быть от 30 до 180 кг");
+                // Проверка диапазона веса согласно БД (30-180 кг)
+                if (request.getWeight().compareTo(new BigDecimal("30")) < 0 ||
+                        request.getWeight().compareTo(new BigDecimal("180")) > 0) {
+                    log.warn("Вес вне допустимого диапазона: {}", request.getWeight());
+                    throw new IllegalArgumentException("Вес должен быть от 30 до 180 кг");
+                }
+
+                // Проверка точности (до 3 знаков после запятой)
+                if (request.getWeight().scale() > 3) {
+                    log.warn("Слишком высокая точность веса: {} знаков после запятой", request.getWeight().scale());
+                    throw new IllegalArgumentException("Вес может содержать не более 3 знаков после запятой");
+                }
+
+                cadet.setWeight(request.getWeight());
+                updated = true;
+                log.info("Вес курсанта {} обновлен на {}", userDetails.getUsername(), request.getWeight());
+            } else {
+                log.debug("Вес не изменился");
             }
-
-            // Проверка точности (до 3 знаков после запятой)
-            if (request.getWeight().scale() > 3) {
-                log.warn("Слишком высокая точность веса: {} знаков после запятой", request.getWeight().scale());
-                throw new IllegalArgumentException("Вес может содержать не более 3 знаков после запятой");
-            }
-
-            cadet.setWeight(request.getWeight());
-            updated = true;
-            log.info("Вес курсанта {} обновлен на {}", userDetails.getUsername(), request.getWeight());
         }
 
         if (updated) {
