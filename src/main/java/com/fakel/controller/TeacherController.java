@@ -16,10 +16,7 @@ public class TeacherController {
     @Autowired
     private TeacherService teacherService;
 
-    /**
-     * PUT /api/teacher/profile
-     * Редактирование профиля преподавателя
-     */
+
     @PutMapping("/profile")
     @PreAuthorize("hasRole('TEACHER')")
     public void updateProfile(

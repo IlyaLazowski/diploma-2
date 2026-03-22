@@ -36,7 +36,6 @@ public class YandexDiskService {
         log.debug("Исходное имя файла: {}", file != null ? file.getOriginalFilename() : null);
         log.debug("Размер файла: {} байт", file != null ? file.getSize() : 0);
 
-        // Проверка входных данных
         if (file == null) {
             log.warn("Попытка загрузки null файла");
             throw new IllegalArgumentException("Файл не может быть null");
@@ -47,13 +46,11 @@ public class YandexDiskService {
             throw new IllegalArgumentException("Файл не может быть пустым");
         }
 
-        // Проверка размера файла (макс 10MB)
         if (file.getSize() > 10 * 1024 * 1024) {
             log.warn("Размер файла превышает 10MB: {} байт", file.getSize());
             throw new IllegalArgumentException("Размер файла не может превышать 10MB");
         }
 
-        // Проверка типа файла
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
             log.warn("Некорректный тип файла: {}", contentType);
@@ -61,7 +58,6 @@ public class YandexDiskService {
         }
         log.debug("Тип файла: {}", contentType);
 
-        // Проверка расширения файла
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null || originalFilename.trim().isEmpty()) {
             log.warn("Имя файла пустое");
@@ -80,46 +76,38 @@ public class YandexDiskService {
             throw new IllegalArgumentException("Файл должен иметь расширение");
         }
 
-        // Проверка допустимых расширений
         if (!extension.matches("\\.(jpg|jpeg|png|gif|webp)$")) {
             log.warn("Недопустимое расширение файла: {}", extension);
             throw new IllegalArgumentException("Допустимые форматы: JPG, JPEG, PNG, GIF, WEBP");
         }
 
-        // Проверка имени файла на недопустимые символы
         if (!trimmedFilename.matches("^[a-zA-Zа-яА-Я0-9\\-_.() ]+\\.[a-zA-Z0-9]+$")) {
             log.warn("Имя файла содержит недопустимые символы: {}", trimmedFilename);
             throw new IllegalArgumentException("Имя файла содержит недопустимые символы");
         }
 
-        // Проверка конфигурации
         if (yandexFolder == null || yandexFolder.trim().isEmpty()) {
             log.error("Не указана папка для загрузки на Яндекс.Диске (yandex.folder)");
             throw new IllegalStateException("Не указана папка для загрузки на Яндекс.Диске");
         }
         log.debug("Папка на Яндекс.Диске: {}", yandexFolder);
 
-        // Генерируем уникальное имя
         String fileName = UUID.randomUUID().toString() + extension;
         String remotePath = yandexFolder + "/" + fileName;
         log.debug("Уникальное имя файла: {}", fileName);
         log.debug("Полный путь на Яндекс.Диске: {}", remotePath);
 
-        // Создаем папку если нужно
         log.debug("Проверка существования папки на Яндекс.Диске");
         createFolderIfNotExists();
 
-        // Получаем URL для загрузки
         log.debug("Получение URL для загрузки");
         String uploadUrl = getUploadUrl(remotePath);
         log.debug("URL для загрузки получен: {}", uploadUrl);
 
-        // Загружаем файл
         log.debug("Загрузка файла на Яндекс.Диск");
         uploadFileToUrl(uploadUrl, file);
         log.info("Файл успешно загружен на Яндекс.Диск");
 
-        // Делаем файл публичным и возвращаем прямую ссылку
         log.debug("Публикация файла и получение прямой ссылки");
         String directLink = publishAndGetDirectLink(remotePath);
         log.info("Прямая ссылка на файл: {}", directLink);
@@ -143,7 +131,6 @@ public class YandexDiskService {
             restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
             log.trace("Папка уже существует: {}", yandexFolder);
         } catch (Exception e) {
-            // Папки нет - создаем
             log.debug("Папка не найдена, создаем: {}", yandexFolder);
             String createUrl = "https://cloud-api.yandex.net/v1/disk/resources?path=" + yandexFolder;
             HttpEntity<String> createEntity = new HttpEntity<>(yandexHeaders);
@@ -255,7 +242,6 @@ public class YandexDiskService {
 
         HttpEntity<String> entity = new HttpEntity<>(yandexHeaders);
 
-        // Делаем файл публичным
         String publishUrl = "https://cloud-api.yandex.net/v1/disk/resources/publish?path=" + remotePath;
         log.trace("Запрос на публикацию: {}", publishUrl);
 
@@ -267,7 +253,6 @@ public class YandexDiskService {
             throw new IOException("Не удалось опубликовать файл на Яндекс.Диске", e);
         }
 
-        // Получаем публичную ссылку на файл
         String infoUrl = "https://cloud-api.yandex.net/v1/disk/resources?path=" + remotePath;
         log.trace("Запрос информации о файле: {}", infoUrl);
 
@@ -303,7 +288,6 @@ public class YandexDiskService {
         String publicUrl = publicUrlNode.asText();
         log.trace("Получена публичная ссылка: {}", publicUrl);
 
-        // Получаем прямую ссылку на скачивание через API
         return getDirectDownloadLink(publicUrl);
     }
 

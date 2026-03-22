@@ -38,7 +38,6 @@ public class CadetService {
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
         }
 
-        // ⚠️ ВАЖНО: сначала проверяем request!
         if (request == null) {
             log.warn("Попытка обновления профиля с null request");
             throw new IllegalArgumentException("Запрос не может быть пустым");
@@ -60,7 +59,7 @@ public class CadetService {
         if (request.getMail() != null && !request.getMail().trim().isEmpty()) {
             String newMail = request.getMail().trim();
 
-            // ⚠️ Проверяем, действительно ли изменился email
+
             if (!newMail.equals(user.getMail())) {
                 log.debug("Запрос на обновление email: {} -> {}", user.getMail(), newMail);
 
@@ -86,7 +85,6 @@ public class CadetService {
         if (request.getPhoneNumber() != null && !request.getPhoneNumber().trim().isEmpty()) {
             String newPhone = request.getPhoneNumber().trim();
 
-            // ⚠️ Проверяем, действительно ли изменился телефон
             if (!newPhone.equals(user.getPhoneNumber())) {
                 log.debug("Запрос на обновление телефона: {} -> {}", user.getPhoneNumber(), newPhone);
 
@@ -104,7 +102,7 @@ public class CadetService {
 
         // Обновление веса
         if (request.getWeight() != null) {
-            // ⚠️ Проверяем, действительно ли изменился вес
+
             if (!request.getWeight().equals(cadet.getWeight())) {
                 log.debug("Запрос на обновление веса: {} -> {}", cadet.getWeight(), request.getWeight());
 

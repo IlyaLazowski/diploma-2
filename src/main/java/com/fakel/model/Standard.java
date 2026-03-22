@@ -29,7 +29,6 @@ public class Standard {
     @Column(nullable = false, length = 32)
     private String grade;
 
-    // ✅ Указываем, что это interval и нужен конвертер
     @Convert(converter = IntervalToDurationConverter.class)
     @Column(name = "time_value", columnDefinition = "interval")
     private Duration timeValue;

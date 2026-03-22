@@ -38,12 +38,7 @@ public class GroupService {
     @Autowired
     private GroupTeacherRepository groupTeacherRepository;
 
-    /**
-     * GET /api/groups?page=0&size=10
-     * GET /api/groups?year=2023
-     * GET /api/groups?onlyMyGroups=true
-     * GET /api/groups?year=2023&onlyMyGroups=true
-     */
+
     public Page<GroupDto> getGroupsWithFilters(
             UserDetails userDetails,
             Integer year,
@@ -92,9 +87,7 @@ public class GroupService {
         }
     }
 
-    /**
-     * Все группы университета (с фильтром по году)
-     */
+
     private Page<GroupDto> getAllUniversityGroupsWithFilter(
             Long universityId, Integer year, Pageable pageable) {
 
@@ -122,9 +115,7 @@ public class GroupService {
         return groups.map(this::convertToDto);
     }
 
-    /**
-     * Только группы, где преподает (с фильтром по году)
-     */
+
     private Page<GroupDto> getMyGroupsWithFilter(
             Long teacherId, Long universityId, Integer year, Pageable pageable) {
 
@@ -200,9 +191,7 @@ public class GroupService {
         return new PageImpl<>(pageContent, pageable, myUniversityGroups.size());
     }
 
-    /**
-     * GET /api/groups/{id}
-     */
+
     public GroupDto getGroupById(Long id, UserDetails userDetails) {
 
         log.info("Получение группы по ID: {}, пользователь: {}", id,
@@ -231,9 +220,7 @@ public class GroupService {
         return convertToDto(group);
     }
 
-    /**
-     * GET /api/groups/number/{number}
-     */
+
     public GroupDto getGroupByNumber(String number, UserDetails userDetails) {
 
         log.info("Получение группы по номеру: {}, пользователь: {}", number,
@@ -275,9 +262,7 @@ public class GroupService {
         return convertToDto(group);
     }
 
-    /**
-     * Проверка доступа преподавателя к группе
-     */
+
     private void checkAccess(UserDetails userDetails, Group group) {
         log.debug("Проверка доступа к группе для пользователя {}", userDetails.getUsername());
 
@@ -312,9 +297,7 @@ public class GroupService {
         log.debug("Доступ разрешен");
     }
 
-    /**
-     * Преобразование Group → GroupDto
-     */
+
     private GroupDto convertToDto(Group group) {
         if (group == null) {
             return null;
@@ -341,9 +324,7 @@ public class GroupService {
         );
     }
 
-    /**
-     * GET /api/groups/statistics?year=2023&onlyMyGroups=true
-     */
+
     public Object getStatistics(UserDetails userDetails, Integer year, boolean onlyMyGroups) {
 
         log.info("Получение статистики по группам: user={}, year={}, onlyMyGroups={}",

@@ -289,9 +289,7 @@ public class ControlService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Получить нормативы из номеров
-     */
+
     private List<Standard> getStandardsFromNumbers(List<Short> numbers) {
         return numbers.stream()
                 .map(num -> standardRepository.findFirstByNumber(num).orElse(null))
@@ -299,9 +297,7 @@ public class ControlService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Получить результаты контроля для курсанта
-     */
+
     public Page<ControlResultDto> getControlResultsForCadet(
             UserDetails userDetails,
             Long controlId,
@@ -410,9 +406,7 @@ public class ControlService {
         );
     }
 
-    /**
-     * Получить полные результаты контроля
-     */
+
     public List<ControlSummaryDto> getControlFullResults(Long controlId, UserDetails userDetails) {
 
         log.info("Получение полных результатов контроля: controlId={}, user={}",
@@ -530,9 +524,7 @@ public class ControlService {
         return result;
     }
 
-    /**
-     * Отправка результатов по номерам нормативов
-     */
+
     @Transactional
     public void submitRawResults(UserDetails userDetails, SubmitRawResultsRequest request) {
 
@@ -750,9 +742,7 @@ public class ControlService {
         log.info("Результаты контроля {} успешно сохранены", control.getId());
     }
 
-    /**
-     * Создание контроля с номерами нормативов
-     */
+
     @Transactional
     public ControlDto createControl(UserDetails userDetails, CreateControlRequest request) {
 
@@ -881,9 +871,7 @@ public class ControlService {
         return convertToDto(savedControl);
     }
 
-    /**
-     * Редактирование результатов контроля
-     */
+
     @Transactional
     public void updateControlResults(UserDetails userDetails, UpdateControlResultsRequest request) {
 

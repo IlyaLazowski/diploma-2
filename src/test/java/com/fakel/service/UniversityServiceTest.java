@@ -36,7 +36,6 @@ class UniversityServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Создаем тестовые университеты
         university1 = new University();
         university1.setId(1L);
         university1.setCode("БГУ");
@@ -55,30 +54,24 @@ class UniversityServiceTest {
 
     @Test
     void getAllUniversities_WithValidData_ShouldReturnList() {
-        // Given
         List<University> universities = Arrays.asList(university1, university2, university3);
         when(universityRepository.findAllByOrderByMarkDesc()).thenReturn(universities);
 
-        // When
         List<UniversityDto> result = universityService.getAllUniversities();
 
-        // Then
         assertNotNull(result);
         assertEquals(3, result.size());
 
-        // Проверяем первый университет
         UniversityDto dto1 = result.get(0);
         assertEquals(1L, dto1.getId());
         assertEquals("БГУ", dto1.getName());
         assertEquals(new BigDecimal("9.5"), dto1.getMark());
 
-        // Проверяем второй университет
         UniversityDto dto2 = result.get(1);
         assertEquals(2L, dto2.getId());
         assertEquals("БНТУ", dto2.getName());
         assertEquals(new BigDecimal("8.7"), dto2.getMark());
 
-        // Проверяем третий университет
         UniversityDto dto3 = result.get(2);
         assertEquals(3L, dto3.getId());
         assertEquals("БГУИР", dto3.getName());
@@ -89,13 +82,10 @@ class UniversityServiceTest {
 
     @Test
     void getAllUniversities_WithEmptyList_ShouldReturnEmptyList() {
-        // Given
         when(universityRepository.findAllByOrderByMarkDesc()).thenReturn(new ArrayList<>());
 
-        // When
         List<UniversityDto> result = universityService.getAllUniversities();
 
-        // Then
         assertNotNull(result);
         assertTrue(result.isEmpty());
         verify(universityRepository, times(1)).findAllByOrderByMarkDesc();
@@ -103,13 +93,10 @@ class UniversityServiceTest {
 
     @Test
     void getAllUniversities_WithNullList_ShouldReturnEmptyList() {
-        // Given
         when(universityRepository.findAllByOrderByMarkDesc()).thenReturn(null);
 
-        // When
         List<UniversityDto> result = universityService.getAllUniversities();
 
-        // Then
         assertNotNull(result);
         assertTrue(result.isEmpty());
         verify(universityRepository, times(1)).findAllByOrderByMarkDesc();
@@ -117,13 +104,10 @@ class UniversityServiceTest {
 
     @Test
     void getAllUniversities_WhenRepositoryThrowsException_ShouldReturnEmptyList() {
-        // Given
         when(universityRepository.findAllByOrderByMarkDesc()).thenThrow(new RuntimeException("DB Error"));
 
-        // When
         List<UniversityDto> result = universityService.getAllUniversities();
 
-        // Then
         assertNotNull(result);
         assertTrue(result.isEmpty());
         verify(universityRepository, times(1)).findAllByOrderByMarkDesc();
@@ -131,7 +115,6 @@ class UniversityServiceTest {
 
     @Test
     void getAllUniversities_WithNullElementInList_ShouldSkipNullElement() {
-        // Given
         List<University> universities = new ArrayList<>();
         universities.add(university1);
         universities.add(null);
@@ -139,14 +122,11 @@ class UniversityServiceTest {
 
         when(universityRepository.findAllByOrderByMarkDesc()).thenReturn(universities);
 
-        // When
         List<UniversityDto> result = universityService.getAllUniversities();
 
-        // Then
         assertNotNull(result);
         assertEquals(2, result.size());
 
-        // Проверяем, что null элемент пропущен
         assertEquals(1L, result.get(0).getId());
         assertEquals(2L, result.get(1).getId());
 
@@ -155,23 +135,19 @@ class UniversityServiceTest {
 
     @Test
     void getAllUniversities_WithNullCode_ShouldUseEmptyString() {
-        // Given
         university2.setCode(null);
         List<University> universities = Arrays.asList(university1, university2);
 
         when(universityRepository.findAllByOrderByMarkDesc()).thenReturn(universities);
 
-        // When
         List<UniversityDto> result = universityService.getAllUniversities();
 
-        // Then
         assertNotNull(result);
         assertEquals(2, result.size());
 
-        // Проверяем университет с null code
         UniversityDto dto2 = result.get(1);
         assertEquals(2L, dto2.getId());
-        assertEquals("", dto2.getName()); // Должна быть пустая строка
+        assertEquals("", dto2.getName());
         assertEquals(new BigDecimal("8.7"), dto2.getMark());
 
         verify(universityRepository, times(1)).findAllByOrderByMarkDesc();
@@ -179,77 +155,63 @@ class UniversityServiceTest {
 
     @Test
     void getAllUniversities_WithNullMark_ShouldWork() {
-        // Given
         university2.setMark(null);
         List<University> universities = Arrays.asList(university1, university2);
 
         when(universityRepository.findAllByOrderByMarkDesc()).thenReturn(universities);
 
-        // When
         List<UniversityDto> result = universityService.getAllUniversities();
 
-        // Then
         assertNotNull(result);
         assertEquals(2, result.size());
 
         UniversityDto dto2 = result.get(1);
         assertEquals(2L, dto2.getId());
         assertEquals("БНТУ", dto2.getName());
-        assertNull(dto2.getMark()); // Mark может быть null
+        assertNull(dto2.getMark());
 
         verify(universityRepository, times(1)).findAllByOrderByMarkDesc();
     }
 
     @Test
     void getAllUniversities_ShouldMaintainOrder() {
-        // Given
-        // Проверяем, что порядок сохраняется (уже отсортировано по убыванию mark)
         List<University> universities = Arrays.asList(university1, university3, university2);
         when(universityRepository.findAllByOrderByMarkDesc()).thenReturn(universities);
 
-        // When
         List<UniversityDto> result = universityService.getAllUniversities();
 
-        // Then
         assertNotNull(result);
         assertEquals(3, result.size());
 
-        // Порядок должен быть таким же, как в репозитории
-        assertEquals(1L, result.get(0).getId()); // БГУ (9.5)
-        assertEquals(3L, result.get(1).getId()); // БГУИР (9.2)
-        assertEquals(2L, result.get(2).getId()); // БНТУ (8.7)
+        assertEquals(1L, result.get(0).getId());
+        assertEquals(3L, result.get(1).getId());
+        assertEquals(2L, result.get(2).getId());
 
         verify(universityRepository, times(1)).findAllByOrderByMarkDesc();
     }
 
     @Test
     void convertToDto_WithNullUniversity_ShouldReturnNull() {
-        // Этот метод приватный, тестируем через getAllUniversities
         List<University> universities = new ArrayList<>();
         universities.add(null);
 
         when(universityRepository.findAllByOrderByMarkDesc()).thenReturn(universities);
 
-        // When
         List<UniversityDto> result = universityService.getAllUniversities();
 
-        // Then
         assertNotNull(result);
-        assertTrue(result.isEmpty()); // null элемент должен быть пропущен
+        assertTrue(result.isEmpty());
     }
 
     @Test
     void convertToDto_WithNullCode_ShouldReturnDtoWithEmptyString() {
-        // Тестируем через getAllUniversities
         university1.setCode(null);
         List<University> universities = Arrays.asList(university1);
 
         when(universityRepository.findAllByOrderByMarkDesc()).thenReturn(universities);
 
-        // When
         List<UniversityDto> result = universityService.getAllUniversities();
 
-        // Then
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals("", result.get(0).getName());
@@ -257,7 +219,6 @@ class UniversityServiceTest {
 
     @Test
     void getAllUniversities_WithLargeList_ShouldWork() {
-        // Given
         List<University> largeList = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             University uni = new University();
@@ -269,10 +230,8 @@ class UniversityServiceTest {
 
         when(universityRepository.findAllByOrderByMarkDesc()).thenReturn(largeList);
 
-        // When
         List<UniversityDto> result = universityService.getAllUniversities();
 
-        // Then
         assertNotNull(result);
         assertEquals(100, result.size());
         assertEquals("Университет 1", result.get(0).getName());

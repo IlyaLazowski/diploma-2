@@ -24,7 +24,7 @@ public class Training {
     private BigDecimal currentWeight;
 
     @Column(name = "rest_period")
-    private Short restPeriod;  // ← ИСПРАВЛЕНО: Integer → Short
+    private Short restPeriod;
 
     @Column(length = 64)
     private String type; // Сила, Скорость, Выносливость
@@ -45,7 +45,7 @@ public class Training {
     public BigDecimal getCurrentWeight() { return currentWeight; }
     public void setCurrentWeight(BigDecimal currentWeight) { this.currentWeight = currentWeight; }
 
-    public Short getRestPeriod() { return restPeriod; }  // ← ИСПРАВЛЕНО
+    public Short getRestPeriod() { return restPeriod; }
     public void setRestPeriod(Short restPeriod) { this.restPeriod = restPeriod; }  // ← ИСПРАВЛЕНО
 
     public String getType() { return type; }

@@ -20,14 +20,7 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    /**
-     * GET /api/articles?page=0&size=10
-     * GET /api/articles?topic=биатлон
-     * GET /api/articles?text=сердце
-     * GET /api/articles?date=2026-02-10
-     * GET /api/articles?dateFrom=2026-01-01&dateTo=2026-02-01
-     * GET /api/articles?tags=медицина,физиология
-     */
+
     @GetMapping
     public Page<ArticleDto> getArticles(
             @RequestParam(required = false) String topic,
@@ -45,9 +38,7 @@ public class ArticleController {
         return articleService.searchArticles(topic, text, date, dateFrom, dateTo, tags, pageable);
     }
 
-    /**
-     * GET /api/articles/{id}
-     */
+
     @GetMapping("/{id}")
     public ArticleDto getArticleById(@PathVariable Long id) {
         return articleService.getArticleById(id);

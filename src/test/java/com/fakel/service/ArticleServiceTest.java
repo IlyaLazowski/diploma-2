@@ -49,7 +49,6 @@ class ArticleServiceTest {
     void setUp() {
         now = LocalDate.now();
 
-        // Создаем теговую статью
         testArticle = new Article();
         testArticle.setId(1L);
         testArticle.setTopic("Тестовая статья");
@@ -66,7 +65,6 @@ class ArticleServiceTest {
 
         testArticle.setTags(List.of(tag1, tag2));
 
-        // Создаем DTO
         testArticleDto = new ArticleDto(
                 1L,
                 "Тестовая статья",
@@ -76,11 +74,8 @@ class ArticleServiceTest {
         );
     }
 
-    // ============= ТЕСТЫ ДЛЯ searchArticles =============
-
     @Test
     void searchArticles_WithTagsAndDateRange_ShouldCallFindByTagsAndDateBetween() {
-        // Given
         List<String> tags = List.of("тест", "java");
         LocalDate from = now.minusDays(10);
         LocalDate to = now;
@@ -90,10 +85,8 @@ class ArticleServiceTest {
         when(articleRepository.findByTagsAndDateBetween(eq(tags), eq(from), eq(to), eq(pageable)))
                 .thenReturn(expectedPage);
 
-        // When
         Page<ArticleDto> result = articleService.searchArticles(null, null, null, from, to, tags, pageable);
 
-        // Then
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         verify(articleRepository, times(1)).findByTagsAndDateBetween(tags, from, to, pageable);
@@ -103,7 +96,6 @@ class ArticleServiceTest {
 
     @Test
     void searchArticles_WithTagsOnly_ShouldCallFindByTags() {
-        // Given
         List<String> tags = List.of("тест", "java");
         Pageable pageable = PageRequest.of(0, 10);
         Page<Article> expectedPage = new PageImpl<>(List.of(testArticle));
@@ -111,10 +103,8 @@ class ArticleServiceTest {
         when(articleRepository.findByTags(eq(tags), eq(pageable)))
                 .thenReturn(expectedPage);
 
-        // When
         Page<ArticleDto> result = articleService.searchArticles(null, null, null, null, null, tags, pageable);
 
-        // Then
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         verify(articleRepository, times(1)).findByTags(tags, pageable);
@@ -123,7 +113,6 @@ class ArticleServiceTest {
 
     @Test
     void searchArticles_WithExactDate_ShouldCallFindByPublicationDate() {
-        // Given
         LocalDate date = now;
         Pageable pageable = PageRequest.of(0, 10);
         Page<Article> expectedPage = new PageImpl<>(List.of(testArticle));
@@ -131,10 +120,8 @@ class ArticleServiceTest {
         when(articleRepository.findByPublicationDate(eq(date), eq(pageable)))
                 .thenReturn(expectedPage);
 
-        // When
         Page<ArticleDto> result = articleService.searchArticles(null, null, date, null, null, null, pageable);
 
-        // Then
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         verify(articleRepository, times(1)).findByPublicationDate(date, pageable);
@@ -142,7 +129,6 @@ class ArticleServiceTest {
 
     @Test
     void searchArticles_WithDateRange_ShouldCallFindByPublicationDateBetween() {
-        // Given
         LocalDate from = now.minusDays(10);
         LocalDate to = now;
         Pageable pageable = PageRequest.of(0, 10);
@@ -151,10 +137,8 @@ class ArticleServiceTest {
         when(articleRepository.findByPublicationDateBetween(eq(from), eq(to), eq(pageable)))
                 .thenReturn(expectedPage);
 
-        // When
         Page<ArticleDto> result = articleService.searchArticles(null, null, null, from, to, null, pageable);
 
-        // Then
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         verify(articleRepository, times(1)).findByPublicationDateBetween(from, to, pageable);
@@ -162,7 +146,6 @@ class ArticleServiceTest {
 
     @Test
     void searchArticles_WithTopic_ShouldCallFindByTopicContainingIgnoreCase() {
-        // Given
         String topic = "тест";
         Pageable pageable = PageRequest.of(0, 10);
         Page<Article> expectedPage = new PageImpl<>(List.of(testArticle));
@@ -170,10 +153,8 @@ class ArticleServiceTest {
         when(articleRepository.findByTopicContainingIgnoreCase(eq(topic), eq(pageable)))
                 .thenReturn(expectedPage);
 
-        // When
         Page<ArticleDto> result = articleService.searchArticles(topic, null, null, null, null, null, pageable);
 
-        // Then
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         verify(articleRepository, times(1)).findByTopicContainingIgnoreCase(topic, pageable);
@@ -181,7 +162,6 @@ class ArticleServiceTest {
 
     @Test
     void searchArticles_WithText_ShouldCallFindByTextContainingIgnoreCase() {
-        // Given
         String text = "содержание";
         Pageable pageable = PageRequest.of(0, 10);
         Page<Article> expectedPage = new PageImpl<>(List.of(testArticle));
@@ -189,10 +169,8 @@ class ArticleServiceTest {
         when(articleRepository.findByTextContainingIgnoreCase(eq(text), eq(pageable)))
                 .thenReturn(expectedPage);
 
-        // When
         Page<ArticleDto> result = articleService.searchArticles(null, text, null, null, null, null, pageable);
 
-        // Then
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         verify(articleRepository, times(1)).findByTextContainingIgnoreCase(text, pageable);
@@ -200,17 +178,13 @@ class ArticleServiceTest {
 
     @Test
     void searchArticles_WithNoFilters_ShouldCallFindAll() {
-        // Given
         Pageable pageable = PageRequest.of(0, 10);
         Page<Article> expectedPage = new PageImpl<>(List.of(testArticle));
 
-        // ⚠️ ИСПРАВЛЕНО: используем doReturn() вместо when()
         doReturn(expectedPage).when(articleRepository).findAll(any(Pageable.class));
 
-        // When
         Page<ArticleDto> result = articleService.searchArticles(null, null, null, null, null, null, pageable);
 
-        // Then
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         verify(articleRepository, times(1)).findAll(any(Pageable.class));
@@ -218,11 +192,9 @@ class ArticleServiceTest {
 
     @Test
     void searchArticles_WithInvalidDateRange_ShouldThrowException() {
-        // Given
         LocalDate from = now;
-        LocalDate to = now.minusDays(10); // from > to
+        LocalDate to = now.minusDays(10);
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> articleService.searchArticles(null, null, null, from, to, null, PageRequest.of(0, 10))
@@ -232,18 +204,13 @@ class ArticleServiceTest {
         verify(articleRepository, never()).findAll(any(Pageable.class));
     }
 
-    // ============= ТЕСТЫ ДЛЯ getArticleById =============
-
     @Test
     void getArticleById_WhenArticleExists_ShouldReturnArticle() {
-        // Given
         Long id = 1L;
         when(articleRepository.findById(id)).thenReturn(Optional.of(testArticle));
 
-        // When
         ArticleDto result = articleService.getArticleById(id);
 
-        // Then
         assertNotNull(result);
         assertEquals(id, result.getId());
         assertEquals("Тестовая статья", result.getTopic());
@@ -258,11 +225,9 @@ class ArticleServiceTest {
 
     @Test
     void getArticleById_WhenArticleDoesNotExist_ShouldThrowException() {
-        // Given
         Long id = 999L;
         when(articleRepository.findById(id)).thenReturn(Optional.empty());
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> articleService.getArticleById(id)
@@ -273,23 +238,7 @@ class ArticleServiceTest {
     }
 
     @Test
-    void getArticleById_WithNullId_ShouldThrowException() {
-        // This test requires @Validated to be active
-        // In unit tests without Spring context, validation annotations won't work
-        // So we'll test the behavior after validation
-    }
-
-    @Test
-    void getArticleById_WithNonPositiveId_ShouldThrowException() {
-        // This test requires @Validated to be active
-        // In unit tests without Spring context, validation annotations won't work
-    }
-
-    // ============= ТЕСТЫ ДЛЯ createArticle =============
-
-    @Test
     void createArticle_WithValidData_ShouldCreateAndReturnArticle() {
-        // Given
         ArticleDto newArticleDto = new ArticleDto(
                 null,
                 "Новая статья",
@@ -312,10 +261,8 @@ class ArticleServiceTest {
             return article;
         });
 
-        // When
         ArticleDto result = articleService.createArticle(newArticleDto);
 
-        // Then
         assertNotNull(result);
         assertEquals(2L, result.getId());
         assertEquals("Новая статья", result.getTopic());
@@ -332,10 +279,8 @@ class ArticleServiceTest {
 
     @Test
     void createArticle_WithExistingTopic_ShouldThrowException() {
-        // Given
         when(articleRepository.existsByTopic("Тестовая статья")).thenReturn(true);
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> articleService.createArticle(testArticleDto)
@@ -348,11 +293,10 @@ class ArticleServiceTest {
 
     @Test
     void createArticle_WithNullPublicationDate_ShouldSetCurrentDate() {
-        // Given
         ArticleDto newArticleDto = new ArticleDto(
                 null,
                 "Новая статья",
-                null, // null дата
+                null,
                 "Содержание новой статьи",
                 List.of("тест")
         );
@@ -370,10 +314,8 @@ class ArticleServiceTest {
             return article;
         });
 
-        // When
         ArticleDto result = articleService.createArticle(newArticleDto);
 
-        // Then
         assertNotNull(result);
         assertEquals(LocalDate.now(), result.getPublicationDate());
 
@@ -384,7 +326,6 @@ class ArticleServiceTest {
 
     @Test
     void createArticle_WithExistingTags_ShouldUseExistingTags() {
-        // Given
         ArticleDto newArticleDto = new ArticleDto(
                 null,
                 "Новая статья",
@@ -410,10 +351,8 @@ class ArticleServiceTest {
             return article;
         });
 
-        // When
         ArticleDto result = articleService.createArticle(newArticleDto);
 
-        // Then
         assertNotNull(result);
         assertEquals(2L, result.getId());
 
@@ -422,11 +361,8 @@ class ArticleServiceTest {
         verify(tagRepository, never()).save(any(Tag.class));
     }
 
-    // ============= ТЕСТЫ ДЛЯ updateArticle =============
-
     @Test
     void updateArticle_WithValidData_ShouldUpdateAndReturnArticle() {
-        // Given
         ArticleDto updateDto = new ArticleDto(
                 1L,
                 "Обновленная тема",
@@ -446,10 +382,8 @@ class ArticleServiceTest {
         });
         when(articleRepository.save(any(Article.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // When
         ArticleDto result = articleService.updateArticle(updateDto);
 
-        // Then
         assertNotNull(result);
         assertEquals("Обновленная тема", result.getTopic());
         assertEquals(now.minusDays(1), result.getPublicationDate());
@@ -464,7 +398,6 @@ class ArticleServiceTest {
 
     @Test
     void updateArticle_WithNullId_ShouldThrowException() {
-        // Given
         ArticleDto updateDto = new ArticleDto(
                 null,
                 "Обновленная тема",
@@ -473,7 +406,6 @@ class ArticleServiceTest {
                 List.of("тест")
         );
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> articleService.updateArticle(updateDto)
@@ -485,7 +417,6 @@ class ArticleServiceTest {
 
     @Test
     void updateArticle_WhenArticleNotFound_ShouldThrowException() {
-        // Given
         ArticleDto updateDto = new ArticleDto(
                 999L,
                 "Обновленная тема",
@@ -496,7 +427,6 @@ class ArticleServiceTest {
 
         when(articleRepository.findById(999L)).thenReturn(Optional.empty());
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> articleService.updateArticle(updateDto)
@@ -508,36 +438,6 @@ class ArticleServiceTest {
 
     @Test
     void updateArticle_WithExistingTopic_ShouldThrowException() {
-        // Given
-        ArticleDto updateDto = new ArticleDto(
-                1L,
-                "Существующая тема", // новая тема, которая уже существует
-                now,
-                "Содержание",
-                List.of("тест")
-        );
-
-        // Важно: тема статьи в testArticle = "Тестовая статья" (из setUp)
-        // updateDto.topic = "Существующая тема" - это ДРУГАЯ тема
-        // Значит проверка existsByTopic должна вернуть true
-
-        when(articleRepository.findById(1L)).thenReturn(Optional.of(testArticle));
-        when(articleRepository.existsByTopic("Существующая тема")).thenReturn(true);
-
-        // When & Then
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,
-                () -> articleService.updateArticle(updateDto)
-        );
-
-        assertEquals("Статья с такой темой уже существует", exception.getMessage());
-        verify(articleRepository, times(1)).existsByTopic("Существующая тема");
-        verify(articleRepository, never()).save(any(Article.class));
-    }
-
-    @Test
-    void updateArticle_WithNewTopicThatAlreadyExists_ShouldThrowException() {
-        // Given
         ArticleDto updateDto = new ArticleDto(
                 1L,
                 "Существующая тема",
@@ -549,7 +449,6 @@ class ArticleServiceTest {
         when(articleRepository.findById(1L)).thenReturn(Optional.of(testArticle));
         when(articleRepository.existsByTopic("Существующая тема")).thenReturn(true);
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> articleService.updateArticle(updateDto)
@@ -557,60 +456,51 @@ class ArticleServiceTest {
 
         assertEquals("Статья с такой темой уже существует", exception.getMessage());
         verify(articleRepository, times(1)).existsByTopic("Существующая тема");
+        verify(articleRepository, never()).save(any(Article.class));
     }
 
     @Test
     void updateArticle_WithPartialData_ShouldUpdateOnlyProvidedFields() {
-        // Given
         ArticleDto updateDto = new ArticleDto(
                 1L,
-                null, // не обновляем тему
-                null, // не обновляем дату
+                null,
+                null,
                 "Только текст обновлен",
-                null // не обновляем теги
+                null
         );
 
         when(articleRepository.findById(1L)).thenReturn(Optional.of(testArticle));
         when(articleRepository.save(any(Article.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // When
         ArticleDto result = articleService.updateArticle(updateDto);
 
-        // Then
         assertNotNull(result);
-        assertEquals("Тестовая статья", result.getTopic()); // тема не изменилась
-        assertEquals(now, result.getPublicationDate()); // дата не изменилась
-        assertEquals("Только текст обновлен", result.getText()); // текст обновился
-        assertEquals(2, result.getTags().size()); // теги не изменились
+        assertEquals("Тестовая статья", result.getTopic());
+        assertEquals(now, result.getPublicationDate());
+        assertEquals("Только текст обновлен", result.getText());
+        assertEquals(2, result.getTags().size());
 
         verify(articleRepository, never()).existsByTopic(any());
         verify(tagRepository, never()).findByCode(any());
     }
 
-    // ============= ТЕСТЫ ДЛЯ deleteArticle =============
-
     @Test
     void deleteArticle_WhenArticleExists_ShouldDelete() {
-        // Given
         Long id = 1L;
         when(articleRepository.existsById(id)).thenReturn(true);
         doNothing().when(articleRepository).deleteById(id);
 
-        // When
         articleService.deleteArticle(id);
 
-        // Then
         verify(articleRepository, times(1)).existsById(id);
         verify(articleRepository, times(1)).deleteById(id);
     }
 
     @Test
     void deleteArticle_WhenArticleDoesNotExist_ShouldThrowException() {
-        // Given
         Long id = 999L;
         when(articleRepository.existsById(id)).thenReturn(false);
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> articleService.deleteArticle(id)
@@ -619,15 +509,5 @@ class ArticleServiceTest {
         assertEquals("Статья не найдена", exception.getMessage());
         verify(articleRepository, times(1)).existsById(id);
         verify(articleRepository, never()).deleteById(any());
-    }
-
-    @Test
-    void deleteArticle_WithNullId_ShouldThrowException() {
-        // This test requires @Validated to be active
-    }
-
-    @Test
-    void deleteArticle_WithNonPositiveId_ShouldThrowException() {
-        // This test requires @Validated to be active
     }
 }

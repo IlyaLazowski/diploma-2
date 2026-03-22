@@ -21,7 +21,7 @@ public class User {
     @Column(nullable = false)
     private String sex;
 
-    // ⚠️⚠️⚠️ ВОТ ТУТ БЫЛА ОШИБКА — НЕ ХВАТАЛО ЭТОГО ПОЛЯ!
+
     @ManyToOne
     @JoinColumn(name = "university_id")
     private University university;

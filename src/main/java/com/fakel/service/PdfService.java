@@ -263,7 +263,7 @@ public class PdfService {
                 log.debug("Добавление графиков завершено: успешно {}, ошибок {}", successCount, errorCount);
             }
 
-            // ==================== ПОДВАЛ ====================
+
             document.newPage();
 
             Paragraph footer = new Paragraph("Отчет сгенерирован автоматически " +

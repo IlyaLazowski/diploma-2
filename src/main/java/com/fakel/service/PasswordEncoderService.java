@@ -56,7 +56,7 @@ public class PasswordEncoderService {
                 continue;
             }
 
-            // Проверяем, не зашифрован ли уже пароль (BCrypt хеши начинаются с $2a$, $2b$ или $2y$)
+
             if (!trimmedPassword.startsWith("$2a$") && !trimmedPassword.startsWith("$2b$") && !trimmedPassword.startsWith("$2y$")) {
                 try {
                     log.debug("Пользователь {}: пароль не зашифрован, кодируем", login);
@@ -78,9 +78,7 @@ public class PasswordEncoderService {
                 processed, encoded, skipped, errors);
     }
 
-    /**
-     * Метод для ручного кодирования пароля (можно вызвать из контроллера при создании пользователя)
-     */
+
     public String encodePassword(String rawPassword) {
         log.info("Ручное кодирование пароля");
 
@@ -109,9 +107,7 @@ public class PasswordEncoderService {
         return encoded;
     }
 
-    /**
-     * Проверка соответствия пароля
-     */
+
     public boolean matches(String rawPassword, String encodedPassword) {
         log.info("Проверка соответствия пароля");
 

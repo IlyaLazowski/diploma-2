@@ -24,12 +24,7 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-    // ============= ДЛЯ ПРЕПОДАВАТЕЛЯ =============
 
-    /**
-     * POST /api/teacher/messages
-     * Отправка сообщения курсанту (только преподаватель)
-     */
     @PostMapping("/teacher/messages")
     @PreAuthorize("hasRole('TEACHER')")
     public MessageDto sendMessage(
@@ -38,10 +33,7 @@ public class MessageController {
         return messageService.sendMessage(userDetails, request);
     }
 
-    /**
-     * GET /api/teacher/messages/sent
-     * История отправленных сообщений преподавателя
-     */
+
     @GetMapping("/teacher/messages/sent")
     @PreAuthorize("hasRole('TEACHER')")
     public Page<MessageDto> getSentMessages(
@@ -58,10 +50,7 @@ public class MessageController {
         return messageService.getSentMessages(userDetails, dateFrom, dateTo, unreadOnly, pageable);
     }
 
-    /**
-     * GET /api/teacher/messages/{id}/read-status
-     * Проверить прочитано ли сообщение
-     */
+
     @GetMapping("/teacher/messages/{id}/read-status")
     @PreAuthorize("hasRole('TEACHER')")
     public Boolean isMessageRead(
@@ -70,10 +59,7 @@ public class MessageController {
         return messageService.isMessageRead(id, userDetails);
     }
 
-    /**
-     * DELETE /api/teacher/messages
-     * Удалить отправленные сообщения
-     */
+
     @DeleteMapping("/teacher/messages")
     @PreAuthorize("hasRole('TEACHER')")
     public void deleteSentMessages(
@@ -82,10 +68,7 @@ public class MessageController {
         messageService.deleteSentMessages(userDetails, request);
     }
 
-    /**
-     * GET /api/teacher/messages/stats
-     * Статистика по отправленным сообщениям
-     */
+
     @GetMapping("/teacher/messages/stats")
     @PreAuthorize("hasRole('TEACHER')")
     public Map<String, Object> getSentMessagesStats(
@@ -93,12 +76,7 @@ public class MessageController {
         return messageService.getSentMessagesStats(userDetails);
     }
 
-    // ============= ДЛЯ КУРСАНТА =============
 
-    /**
-     * GET /api/cadet/messages
-     * Получить все сообщения курсанта (с фильтрацией)
-     */
     @GetMapping("/cadet/messages")
     @PreAuthorize("hasRole('CADET')")
     public Page<MessageDto> getMyMessages(
@@ -115,20 +93,14 @@ public class MessageController {
         return messageService.getMyMessages(userDetails, dateFrom, dateTo, unreadOnly, pageable);
     }
 
-    /**
-     * GET /api/cadet/messages/unread/count
-     * Количество непрочитанных сообщений
-     */
+
     @GetMapping("/cadet/messages/unread/count")
     @PreAuthorize("hasRole('CADET')")
     public Long getUnreadCount(@AuthenticationPrincipal UserDetails userDetails) {
         return messageService.getUnreadCount(userDetails);
     }
 
-    /**
-     * GET /api/cadet/messages/{id}
-     * Получить конкретное сообщение
-     */
+
     @GetMapping("/cadet/messages/{id}")
     @PreAuthorize("hasRole('CADET')")
     public MessageDto getMessageById(
@@ -137,10 +109,7 @@ public class MessageController {
         return messageService.getMessageById(userDetails, id);
     }
 
-    /**
-     * PATCH /api/cadet/messages/status
-     * Пометить сообщения как прочитанные/непрочитанные
-     */
+
     @PatchMapping("/cadet/messages/status")
     @PreAuthorize("hasRole('CADET')")
     public void updateMessagesStatus(
@@ -149,10 +118,7 @@ public class MessageController {
         messageService.updateMessagesStatus(userDetails, request);
     }
 
-    /**
-     * DELETE /api/cadet/messages
-     * Удалить сообщения
-     */
+
     @DeleteMapping("/cadet/messages")
     @PreAuthorize("hasRole('CADET')")
     public void deleteMessages(

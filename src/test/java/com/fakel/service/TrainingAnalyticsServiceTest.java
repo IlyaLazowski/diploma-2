@@ -64,7 +64,6 @@ class TrainingAnalyticsServiceTest {
         cadetId = 1L;
         types = List.of("Сила", "Скорость");
 
-        // Создаем каталоги упражнений
         exerciseCatalog1 = new ExerciseCatalog();
         exerciseCatalog1.setId(1L);
         exerciseCatalog1.setCode("BENCH_PRESS");
@@ -77,7 +76,6 @@ class TrainingAnalyticsServiceTest {
         exerciseCatalog2.setDescription("Приседания");
         exerciseCatalog2.setType("Сила");
 
-        // Создаем параметры упражнений
         paramWeight = new ExerciseParameter();
         paramWeight.setId(1L);
         paramWeight.setCode("вес");
@@ -90,7 +88,6 @@ class TrainingAnalyticsServiceTest {
         paramTime.setId(3L);
         paramTime.setCode("время");
 
-        // Создаем подходы
         approach1 = new Approach();
         approach1.setId(1L);
         approach1.setExerciseParameter(paramWeight);
@@ -111,7 +108,6 @@ class TrainingAnalyticsServiceTest {
         approach4.setExerciseParameter(paramReps);
         approach4.setValue(new BigDecimal("8.0"));
 
-        // Создаем упражнения в тренировке
         exercise1 = new ExercisesInTraining();
         exercise1.setId(1L);
         exercise1.setExerciseCatalog(exerciseCatalog1);
@@ -122,7 +118,6 @@ class TrainingAnalyticsServiceTest {
         exercise2.setExerciseCatalog(exerciseCatalog2);
         exercise2.setApproaches(List.of(approach3, approach4));
 
-        // Создаем тренировки
         training1 = new Training();
         training1.setId(1L);
         training1.setCadetId(cadetId);
@@ -145,11 +140,8 @@ class TrainingAnalyticsServiceTest {
         training3.setExercises(new ArrayList<>());
     }
 
-    // ============= ТЕСТЫ ДЛЯ getWeightProgress =============
-
     @Test
     void getWeightProgress_WithValidData_ShouldReturnWeightMap() {
-        // Given
         List<Object[]> mockRows = new ArrayList<>();
         mockRows.add(new Object[]{Date.valueOf(now.minusDays(20)), 75.5});
         mockRows.add(new Object[]{Date.valueOf(now.minusDays(10)), 76.0});
@@ -157,10 +149,8 @@ class TrainingAnalyticsServiceTest {
 
         when(trainingRepository.getWeightProgress(eq(cadetId), eq(from), eq(to))).thenReturn(mockRows);
 
-        // When
         Map<LocalDate, Double> result = analyticsService.getWeightProgress(cadetId, from, to);
 
-        // Then
         assertNotNull(result);
         assertEquals(3, result.size());
         assertTrue(result.containsKey(now.minusDays(20)));
@@ -170,8 +160,6 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void getWeightProgress_WithInvalidCadetId_ShouldThrowException() {
-        // Given
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> analyticsService.getWeightProgress(null, from, to)
@@ -182,8 +170,6 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void getWeightProgress_WithNullFrom_ShouldThrowException() {
-        // Given
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> analyticsService.getWeightProgress(cadetId, null, to)
@@ -194,8 +180,6 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void getWeightProgress_WithNullTo_ShouldThrowException() {
-        // Given
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> analyticsService.getWeightProgress(cadetId, from, null)
@@ -206,10 +190,8 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void getWeightProgress_WithInvalidDateRange_ShouldThrowException() {
-        // Given
         LocalDate invalidFrom = to.plusDays(1);
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> analyticsService.getWeightProgress(cadetId, invalidFrom, to)
@@ -220,66 +202,52 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void getWeightProgress_WhenRepositoryThrowsException_ShouldReturnEmptyMap() {
-        // Given
         when(trainingRepository.getWeightProgress(anyLong(), any(), any()))
                 .thenThrow(new RuntimeException("DB error"));
 
-        // When
         Map<LocalDate, Double> result = analyticsService.getWeightProgress(cadetId, from, to);
 
-        // Then
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
 
     @Test
     void getWeightProgress_WithNullRows_ShouldReturnEmptyMap() {
-        // Given
         when(trainingRepository.getWeightProgress(anyLong(), any(), any())).thenReturn(null);
 
-        // When
         Map<LocalDate, Double> result = analyticsService.getWeightProgress(cadetId, from, to);
 
-        // Then
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
 
     @Test
     void getWeightProgress_WithInvalidRowData_ShouldSkipInvalidRows() {
-        // Given
         List<Object[]> mockRows = new ArrayList<>();
-        mockRows.add(new Object[]{Date.valueOf(now.minusDays(20)), 75.5}); // валидный
-        mockRows.add(new Object[]{null, 76.0}); // null дата
-        mockRows.add(new Object[]{Date.valueOf(now.minusDays(5)), null}); // null вес
-        mockRows.add(new Object[]{Date.valueOf(now.minusDays(1)), -10.0}); // отрицательный вес
+        mockRows.add(new Object[]{Date.valueOf(now.minusDays(20)), 75.5});
+        mockRows.add(new Object[]{null, 76.0});
+        mockRows.add(new Object[]{Date.valueOf(now.minusDays(5)), null});
+        mockRows.add(new Object[]{Date.valueOf(now.minusDays(1)), -10.0});
 
         when(trainingRepository.getWeightProgress(anyLong(), any(), any())).thenReturn(mockRows);
 
-        // When
         Map<LocalDate, Double> result = analyticsService.getWeightProgress(cadetId, from, to);
 
-        // Then
         assertNotNull(result);
-        assertEquals(1, result.size()); // только первый
+        assertEquals(1, result.size());
     }
-
-    // ============= ТЕСТЫ ДЛЯ getExercisesProgress =============
 
     @Test
     void getExercisesProgress_WithValidData_ShouldReturnExercisesMap() {
-        // Given
         List<Training> trainings = List.of(training1, training2, training3);
         when(trainingRepository.findByCadetIdAndDateBetween(eq(cadetId), eq(from), eq(to)))
                 .thenReturn(trainings);
 
-        // When
         Map<String, Map<String, Map<LocalDate, Double>>> result =
                 analyticsService.getExercisesProgress(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
-        assertEquals(2, result.size()); // два упражнения с данными
+        assertEquals(2, result.size());
 
         assertTrue(result.containsKey("Жим лежа"));
         assertTrue(result.containsKey("Приседания"));
@@ -292,74 +260,57 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void getExercisesProgress_WithNullTypes_ShouldIncludeAllTypes() {
-        // Given
         List<Training> trainings = List.of(training1, training2, training3);
         when(trainingRepository.findByCadetIdAndDateBetween(eq(cadetId), eq(from), eq(to)))
                 .thenReturn(trainings);
 
-        // When
         Map<String, Map<String, Map<LocalDate, Double>>> result =
                 analyticsService.getExercisesProgress(cadetId, from, to, null);
 
-        // Then
         assertNotNull(result);
         assertEquals(2, result.size());
     }
 
-
     @Test
     void getExercisesProgress_WhenRepositoryThrowsException_ShouldReturnEmptyMap() {
-        // Given
         when(trainingRepository.findByCadetIdAndDateBetween(anyLong(), any(), any()))
                 .thenThrow(new RuntimeException("DB error"));
 
-        // When
         Map<String, Map<String, Map<LocalDate, Double>>> result =
                 analyticsService.getExercisesProgress(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
 
     @Test
     void getExercisesProgress_WithNoTrainings_ShouldReturnEmptyMap() {
-        // Given
         when(trainingRepository.findByCadetIdAndDateBetween(anyLong(), any(), any()))
                 .thenReturn(new ArrayList<>());
 
-        // When
         Map<String, Map<String, Map<LocalDate, Double>>> result =
                 analyticsService.getExercisesProgress(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
 
-    // ============= ТЕСТЫ ДЛЯ getTonnageProgress =============
-
     @Test
     void getTonnageProgress_WithValidData_ShouldReturnTonnageMap() {
-        // Given
         List<Training> trainings = List.of(training1, training2);
         when(trainingRepository.findByCadetIdAndDateBetween(eq(cadetId), eq(from), eq(to)))
                 .thenReturn(trainings);
 
-        // When
         Map<String, Map<LocalDate, Double>> result =
                 analyticsService.getTonnageProgress(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertEquals(2, result.size());
 
-        // Жим лежа: вес 100 * повторения 10 = 1000
         Map<LocalDate, Double> benchTonnage = result.get("Жим лежа");
         assertNotNull(benchTonnage);
         assertEquals(1000.0, benchTonnage.get(now.minusDays(20)));
 
-        // Приседания: вес 120 * повторения 8 = 960
         Map<LocalDate, Double> squatTonnage = result.get("Приседания");
         assertNotNull(squatTonnage);
         assertEquals(960.0, squatTonnage.get(now.minusDays(10)));
@@ -367,78 +318,61 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void getTonnageProgress_WithMissingWeightOrReps_ShouldSkip() {
-        // Given
-        // Убираем вес из первого подхода
-        exercise1.setApproaches(List.of(approach2)); // только повторения, без веса
+        exercise1.setApproaches(List.of(approach2));
 
         List<Training> trainings = List.of(training1, training2);
         when(trainingRepository.findByCadetIdAndDateBetween(eq(cadetId), eq(from), eq(to)))
                 .thenReturn(trainings);
 
-        // When
         Map<String, Map<LocalDate, Double>> result =
                 analyticsService.getTonnageProgress(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
-        assertEquals(1, result.size()); // только приседания
+        assertEquals(1, result.size());
     }
-
-    // ============= ТЕСТЫ ДЛЯ getVolumeProgress =============
 
     @Test
     void getVolumeProgress_WithValidData_ShouldReturnVolumeMap() {
-        // Given
         List<Training> trainings = List.of(training1, training2, training3);
         when(trainingRepository.findByCadetIdAndDateBetween(eq(cadetId), eq(from), eq(to)))
                 .thenReturn(trainings);
 
-        // When
         Map<LocalDate, Integer> result =
                 analyticsService.getVolumeProgress(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertEquals(3, result.size());
-        assertEquals(2, result.get(now.minusDays(20))); // 2 подхода
-        assertEquals(2, result.get(now.minusDays(10))); // 2 подхода
-        assertEquals(0, result.get(now.minusDays(5))); // 0 подходов
+        assertEquals(2, result.get(now.minusDays(20)));
+        assertEquals(2, result.get(now.minusDays(10)));
+        assertEquals(0, result.get(now.minusDays(5)));
     }
 
     @Test
     void getVolumeProgress_WithTrainingWithoutExercises_ShouldReturnZero() {
-        // Given
         List<Training> trainings = List.of(training3);
         when(trainingRepository.findByCadetIdAndDateBetween(eq(cadetId), eq(from), eq(to)))
                 .thenReturn(trainings);
 
-        // When
         Map<LocalDate, Integer> result =
                 analyticsService.getVolumeProgress(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(0, result.get(now.minusDays(5)));
     }
 
-    // ============= ТЕСТЫ ДЛЯ getSummary =============
-
     @Test
     void getSummary_WithValidData_ShouldReturnSummary() {
-        // Given
         List<Training> trainings = List.of(training1, training2, training3);
         when(trainingRepository.findByCadetIdAndDateBetween(eq(cadetId), eq(from), eq(to)))
                 .thenReturn(trainings);
 
-        // When
         Map<String, Object> result = analyticsService.getSummary(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertEquals(3, result.get("totalTrainings"));
         assertEquals(ChronoUnit.DAYS.between(from, to) + 1, result.get("totalDays"));
-        assertEquals(4, result.get("totalApproaches")); // 2+2
+        assertEquals(4, result.get("totalApproaches"));
 
         Map<String, Long> byType = (Map<String, Long>) result.get("byType");
         assertEquals(2, byType.size());
@@ -448,14 +382,11 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void getSummary_WithNoTrainings_ShouldReturnEmptySummary() {
-        // Given
         when(trainingRepository.findByCadetIdAndDateBetween(anyLong(), any(), any()))
                 .thenReturn(new ArrayList<>());
 
-        // When
         Map<String, Object> result = analyticsService.getSummary(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertEquals(0, result.get("totalTrainings"));
         assertEquals(ChronoUnit.DAYS.between(from, to) + 1, result.get("totalDays"));
@@ -465,23 +396,17 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void getSummary_WhenRepositoryThrowsException_ShouldReturnEmptySummary() {
-        // Given
         when(trainingRepository.findByCadetIdAndDateBetween(anyLong(), any(), any()))
                 .thenThrow(new RuntimeException("DB error"));
 
-        // When
         Map<String, Object> result = analyticsService.getSummary(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertEquals(0, result.get("totalTrainings"));
     }
 
-    // ============= ТЕСТЫ ДЛЯ getParameterDisplayName =============
-
     @Test
     void getParameterDisplayName_WithKnownCodes_ShouldReturnDisplayName() {
-        // Тестируем через публичные методы
         List<Training> trainings = List.of(training1);
         when(trainingRepository.findByCadetIdAndDateBetween(eq(cadetId), eq(from), eq(to)))
                 .thenReturn(trainings);
@@ -497,7 +422,6 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void getParameterDisplayName_WithUnknownCode_ShouldReturnCode() {
-        // Создаем параметр с неизвестным кодом
         ExerciseParameter unknownParam = new ExerciseParameter();
         unknownParam.setId(4L);
         unknownParam.setCode("unknown");
@@ -521,11 +445,8 @@ class TrainingAnalyticsServiceTest {
         assertTrue(benchPress.containsKey("unknown"));
     }
 
-    // ============= ТЕСТЫ ДЛЯ extractDate =============
-
     @Test
     void extractDate_WithSqlDate_ShouldReturnLocalDate() {
-        // Тестируем через getWeightProgress
         List<Object[]> mockRows = new ArrayList<>();
         mockRows.add(new Object[]{Date.valueOf(now.minusDays(20)), 75.5});
 
@@ -539,7 +460,6 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void extractDate_WithUtilDate_ShouldReturnLocalDate() {
-        // Тестируем через getWeightProgress
         List<Object[]> mockRows = new ArrayList<>();
         mockRows.add(new Object[]{new java.util.Date(), 75.5});
 
@@ -550,11 +470,8 @@ class TrainingAnalyticsServiceTest {
         assertEquals(1, result.size());
     }
 
-    // ============= ТЕСТЫ ДЛЯ extractDouble =============
-
     @Test
     void extractDouble_WithBigDecimal_ShouldReturnDouble() {
-        // Тестируем через getWeightProgress
         List<Object[]> mockRows = new ArrayList<>();
         mockRows.add(new Object[]{Date.valueOf(now.minusDays(20)), new BigDecimal("75.5")});
 
@@ -568,7 +485,6 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void extractDouble_WithInteger_ShouldReturnDouble() {
-        // Тестируем через getWeightProgress
         List<Object[]> mockRows = new ArrayList<>();
         mockRows.add(new Object[]{Date.valueOf(now.minusDays(20)), 75});
 
@@ -582,7 +498,6 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void extractDouble_WithLong_ShouldReturnDouble() {
-        // Тестируем через getWeightProgress
         List<Object[]> mockRows = new ArrayList<>();
         mockRows.add(new Object[]{Date.valueOf(now.minusDays(20)), 75L});
 
@@ -596,7 +511,6 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void extractDouble_WithFloat_ShouldReturnDouble() {
-        // Тестируем через getWeightProgress
         List<Object[]> mockRows = new ArrayList<>();
         mockRows.add(new Object[]{Date.valueOf(now.minusDays(20)), 75.5f});
 
@@ -610,7 +524,6 @@ class TrainingAnalyticsServiceTest {
 
     @Test
     void extractDouble_WithNull_ShouldReturnNull() {
-        // Тестируем через getWeightProgress
         List<Object[]> mockRows = new ArrayList<>();
         mockRows.add(new Object[]{Date.valueOf(now.minusDays(20)), null});
 
@@ -618,6 +531,6 @@ class TrainingAnalyticsServiceTest {
 
         Map<LocalDate, Double> result = analyticsService.getWeightProgress(cadetId, from, to);
 
-        assertEquals(0, result.size()); // null пропускается
+        assertEquals(0, result.size());
     }
 }

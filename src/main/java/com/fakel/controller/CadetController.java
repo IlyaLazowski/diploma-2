@@ -16,10 +16,7 @@ public class CadetController {
     @Autowired
     private CadetService cadetService;
 
-    /**
-     * PUT /api/cadet/profile
-     * Редактирование профиля курсанта
-     */
+
     @PutMapping("/profile")
     @PreAuthorize("hasRole('CADET')")
     public void updateProfile(

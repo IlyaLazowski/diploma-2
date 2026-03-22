@@ -26,11 +26,7 @@ public class GroupController {
     @Autowired
     private ControlService controlService;
 
-    // ============= ГРУППЫ (ТОЛЬКО ДЛЯ ПРЕПОДАВАТЕЛЯ) =============
 
-    /**
-     * GET /api/groups?page=0&size=10&year=2023&onlyMyGroups=true
-     */
     @GetMapping("/groups")
     @PreAuthorize("hasRole('TEACHER')")
     public Page<GroupDto> getAllGroups(
@@ -47,9 +43,7 @@ public class GroupController {
         return groupService.getGroupsWithFilters(userDetails, year, onlyMyGroups, pageable);
     }
 
-    /**
-     * GET /api/groups/{id}
-     */
+
     @GetMapping("/groups/{id}")
     @PreAuthorize("hasRole('TEACHER')")
     public GroupDto getGroupById(
@@ -58,9 +52,7 @@ public class GroupController {
         return groupService.getGroupById(id, userDetails);
     }
 
-    /**
-     * GET /api/groups/number/{number}
-     */
+
     @GetMapping("/groups/number/{number}")
     @PreAuthorize("hasRole('TEACHER')")
     public GroupDto getGroupByNumber(
@@ -69,11 +61,7 @@ public class GroupController {
         return groupService.getGroupByNumber(number, userDetails);
     }
 
-    // ============= КОНТРОЛИ ГРУППЫ (ТОЛЬКО ДЛЯ ПРЕПОДАВАТЕЛЯ) =============
 
-    /**
-     * GET /api/groups/{groupId}/controls?page=0&size=10&dateFrom=2026-01-01&dateTo=2026-12-31&type=Экзамен
-     */
     @GetMapping("/groups/{groupId}/controls")
     @PreAuthorize("hasRole('TEACHER')")
     public Page<ControlDto> getGroupControls(
@@ -91,11 +79,7 @@ public class GroupController {
         return controlService.getGroupControls(userDetails, groupId, dateFrom, dateTo, type, pageable);
     }
 
-    // ============= МОИ КОНТРОЛИ (ТОЛЬКО ДЛЯ КУРСАНТА) =============
 
-    /**
-     * GET /api/my/controls?page=0&size=10&dateFrom=2026-01-01&dateTo=2026-12-31&type=Экзамен
-     */
     @GetMapping("/my/controls")
     @PreAuthorize("hasRole('CADET')")
     public Page<ControlDto> getMyControls(
@@ -112,10 +96,7 @@ public class GroupController {
         return controlService.getCadetControls(userDetails, dateFrom, dateTo, type, pageable);
     }
 
-    /**
-     * GET /api/my/controls/{controlId}/results?page=0&size=10
-     * Результаты контроля для курсанта (вся группа)
-     */
+
     @GetMapping("/my/controls/{controlId}/results")
     @PreAuthorize("hasRole('CADET')")
     public Page<ControlResultDto> getMyControlResults(
@@ -130,9 +111,7 @@ public class GroupController {
         return controlService.getControlResultsForCadet(userDetails, controlId, pageable);
     }
 
-    /**
-     * GET /api/my/controls/{controlId}
-     */
+
     @GetMapping("/my/controls/{controlId}")
     @PreAuthorize("hasRole('CADET')")
     public ControlDto getMyControlById(
@@ -142,10 +121,7 @@ public class GroupController {
         return controlService.getCadetControlById(userDetails, controlId);
     }
 
-    /**
-     * GET /api/my/controls/{controlId}/full
-     * Получить полные результаты контроля для курсанта (вся группа)
-     */
+
     @GetMapping("/my/controls/{controlId}/full")
     @PreAuthorize("hasRole('CADET')")
     public List<ControlSummaryDto> getMyControlFullResults(
@@ -154,10 +130,7 @@ public class GroupController {
         return controlService.getControlFullResults(controlId, userDetails);
     }
 
-    /**
-     * GET /api/groups/{groupId}/controls/{controlId}/full
-     * Получить полные результаты контроля для преподавателя
-     */
+
     @GetMapping("/groups/{groupId}/controls/{controlId}/full")
     @PreAuthorize("hasRole('TEACHER')")
     public List<ControlSummaryDto> getGroupControlFullResults(
@@ -170,10 +143,7 @@ public class GroupController {
     }
 
 
-    /**
-     * POST /api/groups/controls/{controlId}/raw-results
-     * Отправить сырые результаты контроля
-     */
+
     @PostMapping("/groups/controls/{controlId}/raw-results")
     @PreAuthorize("hasRole('TEACHER')")
     public void submitRawResults(
@@ -196,10 +166,7 @@ public class GroupController {
         return controlService.createControl(userDetails, request);
     }
 
-    /**
-     * PUT /api/groups/controls/{controlId}/results
-     * Редактирование результатов контроля
-     */
+
     @PutMapping("/groups/controls/{controlId}/results")
     @PreAuthorize("hasRole('TEACHER')")
     public void updateControlResults(

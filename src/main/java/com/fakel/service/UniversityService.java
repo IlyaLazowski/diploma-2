@@ -26,24 +26,20 @@ public class UniversityService {
         List<University> universities;
 
         try {
-            // Достаем все университеты из БД, сортируем по оценке
             universities = universityRepository.findAllByOrderByMarkDesc();
             log.debug("Получено {} университетов из БД", universities != null ? universities.size() : 0);
         } catch (Exception e) {
             log.error("Ошибка при получении университетов из БД: {}", e.getMessage(), e);
-            // Если ошибка при запросе к БД, возвращаем пустой список
             return new ArrayList<>();
         }
 
-        // Проверка на null
         if (universities == null || universities.isEmpty()) {
             log.debug("Список университетов пуст");
             return new ArrayList<>();
         }
 
-        // Превращаем University → UniversityDto
         List<UniversityDto> result = universities.stream()
-                .filter(u -> u != null)  // пропускаем null элементы
+                .filter(u -> u != null)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
 
@@ -63,11 +59,9 @@ public class UniversityService {
 
         log.trace("Конвертация университета id={} в DTO", university.getId());
 
-        // Безопасное получение данных с проверками на null
         Long id = university.getId();
         String code = university.getCode();
 
-        // Если code null, используем пустую строку
         if (code == null) {
             log.trace("У университета id={} отсутствует code, используем пустую строку", id);
             code = "";

@@ -51,44 +51,35 @@ class TeacherServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Создаем тестового пользователя
         testUser = new User();
         testUser.setId(1L);
         testUser.setLogin("teacher");
         testUser.setMail("old@mail.com");
         testUser.setPhoneNumber("+375291234567");
 
-        // Создаем тестового преподавателя
         testTeacher = new Teacher();
         testTeacher.setUserId(1L);
         testTeacher.setUser(testUser);
         testTeacher.setQualification("Доцент");
         testTeacher.setPost("Заведующий кафедрой");
 
-        // Создаем валидный запрос
         validRequest = new UpdateTeacherProfileRequest();
         validRequest.setMail("new@mail.com");
         validRequest.setPhoneNumber("+375337654321");
         validRequest.setQualification("Профессор");
         validRequest.setPost("Декан");
 
-        // Настройка UserDetails
         lenient().when(userDetails.getUsername()).thenReturn("teacher");
     }
 
-    // ============= ТЕСТЫ ДЛЯ updateProfile =============
-
     @Test
     void updateProfile_WithAllFields_ShouldUpdateAll() {
-        // Given
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
         when(userRepository.existsByMail("new@mail.com")).thenReturn(false);
         when(userRepository.existsByPhoneNumber("+375337654321")).thenReturn(false);
 
-        // When
         teacherService.updateProfile(userDetails, validRequest);
 
-        // Then
         verify(userRepository, times(1)).save(userCaptor.capture());
         verify(teacherRepository, times(1)).save(teacherCaptor.capture());
 
@@ -103,91 +94,76 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithOnlyEmail_ShouldUpdateEmail() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setMail("new@mail.com");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
         when(userRepository.existsByMail("new@mail.com")).thenReturn(false);
 
-        // When
         teacherService.updateProfile(userDetails, request);
 
-        // Then
         verify(userRepository, times(1)).save(userCaptor.capture());
         verify(teacherRepository, times(1)).save(any());
 
         User savedUser = userCaptor.getValue();
         assertEquals("new@mail.com", savedUser.getMail());
-        assertEquals("+375291234567", savedUser.getPhoneNumber()); // не изменился
+        assertEquals("+375291234567", savedUser.getPhoneNumber());
     }
 
     @Test
     void updateProfile_WithOnlyPhone_ShouldUpdatePhone() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setPhoneNumber("+375337654321");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
         when(userRepository.existsByPhoneNumber("+375337654321")).thenReturn(false);
 
-        // When
         teacherService.updateProfile(userDetails, request);
 
-        // Then
         verify(userRepository, times(1)).save(userCaptor.capture());
         verify(teacherRepository, times(1)).save(any());
 
         User savedUser = userCaptor.getValue();
-        assertEquals("old@mail.com", savedUser.getMail()); // не изменился
+        assertEquals("old@mail.com", savedUser.getMail());
         assertEquals("+375337654321", savedUser.getPhoneNumber());
     }
 
     @Test
     void updateProfile_WithOnlyQualification_ShouldUpdateQualification() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setQualification("Профессор");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When
         teacherService.updateProfile(userDetails, request);
 
-        // Then
         verify(userRepository, times(1)).save(any());
         verify(teacherRepository, times(1)).save(teacherCaptor.capture());
 
         Teacher savedTeacher = teacherCaptor.getValue();
         assertEquals("Профессор", savedTeacher.getQualification());
-        assertEquals("Заведующий кафедрой", savedTeacher.getPost()); // не изменилась
+        assertEquals("Заведующий кафедрой", savedTeacher.getPost());
     }
 
     @Test
     void updateProfile_WithOnlyPost_ShouldUpdatePost() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setPost("Декан");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When
         teacherService.updateProfile(userDetails, request);
 
-        // Then
         verify(userRepository, times(1)).save(any());
         verify(teacherRepository, times(1)).save(teacherCaptor.capture());
 
         Teacher savedTeacher = teacherCaptor.getValue();
-        assertEquals("Доцент", savedTeacher.getQualification()); // не изменилась
+        assertEquals("Доцент", savedTeacher.getQualification());
         assertEquals("Декан", savedTeacher.getPost());
     }
 
-
     @Test
     void updateProfile_WithNullUserDetails_ShouldThrowException() {
-        // Given
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> teacherService.updateProfile(null, validRequest)
@@ -199,10 +175,8 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithNullRequest_ShouldThrowException() {
-        // Given
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> teacherService.updateProfile(userDetails, null)
@@ -215,10 +189,8 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WhenTeacherNotFound_ShouldThrowException() {
-        // Given
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.empty());
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> teacherService.updateProfile(userDetails, validRequest)
@@ -231,11 +203,9 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WhenUserNotFound_ShouldThrowException() {
-        // Given
         testTeacher.setUser(null);
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> teacherService.updateProfile(userDetails, validRequest)
@@ -247,13 +217,11 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithEmailTooLong_ShouldThrowException() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setMail("a".repeat(257) + "@mail.com");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> teacherService.updateProfile(userDetails, request)
@@ -265,13 +233,11 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithInvalidEmailFormat_ShouldThrowException() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setMail("invalid-email");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> teacherService.updateProfile(userDetails, request)
@@ -283,14 +249,12 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithExistingEmail_ShouldThrowException() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setMail("existing@mail.com");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
         when(userRepository.existsByMail("existing@mail.com")).thenReturn(true);
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> teacherService.updateProfile(userDetails, request)
@@ -302,13 +266,11 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithInvalidPhoneFormat_ShouldThrowException() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setPhoneNumber("123456789");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> teacherService.updateProfile(userDetails, request)
@@ -320,14 +282,12 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithExistingPhone_ShouldThrowException() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setPhoneNumber("+375291111111");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
         when(userRepository.existsByPhoneNumber("+375291111111")).thenReturn(true);
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> teacherService.updateProfile(userDetails, request)
@@ -339,13 +299,11 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithQualificationTooLong_ShouldThrowException() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setQualification("a".repeat(65));
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> teacherService.updateProfile(userDetails, request)
@@ -357,13 +315,11 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithQualificationInvalidCharacters_ShouldThrowException() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setQualification("Профессор@#$");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> teacherService.updateProfile(userDetails, request)
@@ -375,13 +331,11 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithPostTooLong_ShouldThrowException() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setPost("a".repeat(65));
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> teacherService.updateProfile(userDetails, request)
@@ -393,13 +347,11 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithPostInvalidCharacters_ShouldThrowException() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setPost("Декан@#$");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> teacherService.updateProfile(userDetails, request)
@@ -411,16 +363,13 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithSameEmail_ShouldNotCheckExistence() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setMail("old@mail.com");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When
         teacherService.updateProfile(userDetails, request);
 
-        // Then
         verify(userRepository, never()).existsByMail(anyString());
         verify(userRepository, never()).save(any());
         verify(teacherRepository, never()).save(any());
@@ -428,35 +377,26 @@ class TeacherServiceTest {
 
     @Test
     void updateProfile_WithSamePhone_ShouldNotCheckExistence() {
-        // Given
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setPhoneNumber("+375291234567");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
 
-        // When
         teacherService.updateProfile(userDetails, request);
 
-        // Then
         verify(userRepository, never()).existsByPhoneNumber(anyString());
         verify(userRepository, never()).save(any());
         verify(teacherRepository, never()).save(any());
     }
 
-
-
-    // ============= ТЕСТЫ ДЛЯ isValidEmail =============
-
     @Test
     void isValidEmail_WithValidEmail_ShouldReturnTrue() {
-        // This method is private, tested through updateProfile
         UpdateTeacherProfileRequest request = new UpdateTeacherProfileRequest();
         request.setMail("valid@mail.com");
 
         when(teacherRepository.findByUserLogin("teacher")).thenReturn(Optional.of(testTeacher));
         when(userRepository.existsByMail("valid@mail.com")).thenReturn(false);
 
-        // Should not throw exception
         assertDoesNotThrow(() -> teacherService.updateProfile(userDetails, request));
     }
 
@@ -470,8 +410,6 @@ class TeacherServiceTest {
         assertThrows(IllegalArgumentException.class,
                 () -> teacherService.updateProfile(userDetails, request));
     }
-
-    // ============= ТЕСТЫ ДЛЯ isValidPhone =============
 
     @Test
     void isValidPhone_WithValidPhone_ShouldReturnTrue() {
@@ -494,8 +432,6 @@ class TeacherServiceTest {
         assertThrows(IllegalArgumentException.class,
                 () -> teacherService.updateProfile(userDetails, request));
     }
-
-    // ============= ТЕСТЫ ДЛЯ isValidText =============
 
     @Test
     void isValidText_WithValidText_ShouldReturnTrue() {

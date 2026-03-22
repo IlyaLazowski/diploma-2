@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 class ReportServiceTest {
 
     @Mock
-    private TrainingAnalyticsService analyticsService;  // ← ИСПРАВЛЕНО!
+    private TrainingAnalyticsService analyticsService;
 
     @Mock
     private ChartService chartService;
@@ -59,12 +59,10 @@ class ReportServiceTest {
         to = now;
         types = List.of("Сила", "Скорость");
 
-        // Создаем университет
         testUniversity = new University();
         testUniversity.setId(1L);
         testUniversity.setCode("Военная академия");
 
-        // Создаем пользователя
         testUser = new User();
         testUser.setId(1L);
         testUser.setLastName("Иванов");
@@ -72,13 +70,11 @@ class ReportServiceTest {
         testUser.setPatronymic("Иванович");
         testUser.setUniversity(testUniversity);
 
-        // Создаем курсанта
         testCadet = new Cadet();
         testCadet.setUserId(1L);
         testCadet.setUser(testUser);
         testCadet.setGroupId(1L);
 
-        // Создаем сводную статистику
         summary = new HashMap<>();
         summary.put("totalTrainings", 10);
         summary.put("totalDays", 30);
@@ -89,14 +85,12 @@ class ReportServiceTest {
         byType.put("Скорость", 4L);
         summary.put("byType", byType);
 
-        // Создаем данные о весе
         weightData = new LinkedHashMap<>();
         weightData.put(now.minusDays(30), 75.5);
         weightData.put(now.minusDays(20), 76.0);
         weightData.put(now.minusDays(10), 75.8);
         weightData.put(now, 76.2);
 
-        // Создаем данные об упражнениях
         exercisesData = new HashMap<>();
 
         Map<String, Map<LocalDate, Double>> exercise1Data = new HashMap<>();
@@ -117,11 +111,8 @@ class ReportServiceTest {
         exercisesData.put("Жим лежа", exercise1Data);
     }
 
-    // ============= ТЕСТЫ ДЛЯ generateTrainingReport =============
-
     @Test
     void generateTrainingReport_WithValidData_ShouldGenerateReport() throws Exception {
-        // Given
         Long cadetId = 1L;
         byte[] expectedPdf = "PDF content".getBytes();
 
@@ -149,10 +140,8 @@ class ReportServiceTest {
                 anyMap()
         );
 
-        // When
         byte[] result = reportService.generateTrainingReport(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertArrayEquals(expectedPdf, result);
 
@@ -169,8 +158,6 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WithNullCadetId_ShouldThrowException() {
-        // Given
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> reportService.generateTrainingReport(null, from, to, types)
@@ -182,10 +169,8 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WithInvalidCadetId_ShouldThrowException() {
-        // Given
         Long cadetId = 0L;
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> reportService.generateTrainingReport(cadetId, from, to, types)
@@ -196,10 +181,8 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WithNullFrom_ShouldThrowException() {
-        // Given
         Long cadetId = 1L;
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> reportService.generateTrainingReport(cadetId, null, to, types)
@@ -210,10 +193,8 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WithNullTo_ShouldThrowException() {
-        // Given
         Long cadetId = 1L;
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> reportService.generateTrainingReport(cadetId, from, null, types)
@@ -224,11 +205,9 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WithInvalidDateRange_ShouldThrowException() {
-        // Given
         Long cadetId = 1L;
         LocalDate invalidFrom = to.plusDays(1);
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> reportService.generateTrainingReport(cadetId, invalidFrom, to, types)
@@ -239,11 +218,9 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WithInvalidType_ShouldThrowException() {
-        // Given
         Long cadetId = 1L;
         List<String> invalidTypes = List.of("Сила", "Неверный тип");
 
-        // When & Then
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> reportService.generateTrainingReport(cadetId, from, to, invalidTypes)
@@ -254,11 +231,9 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WhenCadetNotFound_ShouldThrowException() {
-        // Given
         Long cadetId = 999L;
         when(cadetRepository.findById(cadetId)).thenReturn(Optional.empty());
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> reportService.generateTrainingReport(cadetId, from, to, types)
@@ -269,12 +244,10 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WhenCadetHasNoUser_ShouldThrowException() {
-        // Given
         Long cadetId = 1L;
         testCadet.setUser(null);
         when(cadetRepository.findById(cadetId)).thenReturn(Optional.of(testCadet));
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> reportService.generateTrainingReport(cadetId, from, to, types)
@@ -285,12 +258,10 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WhenCadetHasNoGroup_ShouldThrowException() {
-        // Given
         Long cadetId = 1L;
         testCadet.setGroupId(null);
         when(cadetRepository.findById(cadetId)).thenReturn(Optional.of(testCadet));
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> reportService.generateTrainingReport(cadetId, from, to, types)
@@ -301,7 +272,6 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WhenCadetHasNoUniversity_ShouldUseDefault() throws Exception {
-        // Given
         Long cadetId = 1L;
         testUser.setUniversity(null);
         byte[] expectedPdf = "PDF content".getBytes();
@@ -332,10 +302,8 @@ class ReportServiceTest {
                 anyMap()
         );
 
-        // When
         byte[] result = reportService.generateTrainingReport(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertArrayEquals(expectedPdf, result);
         assertEquals("Военная академия", uniCaptor.getValue());
@@ -343,13 +311,11 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WhenAnalyticsServiceThrowsException_ShouldThrowRuntimeException() {
-        // Given
         Long cadetId = 1L;
         when(cadetRepository.findById(cadetId)).thenReturn(Optional.of(testCadet));
         when(analyticsService.getSummary(eq(cadetId), eq(from), eq(to), eq(types)))
                 .thenThrow(new RuntimeException("Analytics error"));
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> reportService.generateTrainingReport(cadetId, from, to, types)
@@ -360,7 +326,6 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WhenWeightProgressThrowsException_ShouldUseEmptyMap() throws Exception {
-        // Given
         Long cadetId = 1L;
         byte[] expectedPdf = "PDF content".getBytes();
 
@@ -386,10 +351,8 @@ class ReportServiceTest {
                 anyMap()
         );
 
-        // When
         byte[] result = reportService.generateTrainingReport(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertArrayEquals(expectedPdf, result);
 
@@ -398,7 +361,6 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WhenExercisesProgressThrowsException_ShouldUseEmptyMap() throws Exception {
-        // Given
         Long cadetId = 1L;
         byte[] expectedPdf = "PDF content".getBytes();
 
@@ -424,10 +386,8 @@ class ReportServiceTest {
                 anyMap()
         );
 
-        // When
         byte[] result = reportService.generateTrainingReport(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertArrayEquals(expectedPdf, result);
 
@@ -436,7 +396,6 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WithInsufficientWeightData_ShouldNotCreateWeightChart() throws Exception {
-        // Given
         Long cadetId = 1L;
         byte[] expectedPdf = "PDF content".getBytes();
 
@@ -464,10 +423,8 @@ class ReportServiceTest {
                 anyMap()
         );
 
-        // When
         byte[] result = reportService.generateTrainingReport(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertArrayEquals(expectedPdf, result);
 
@@ -476,7 +433,6 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WithExerciseWithoutEnoughData_ShouldSkipChart() throws Exception {
-        // Given
         Long cadetId = 1L;
         byte[] expectedPdf = "PDF content".getBytes();
 
@@ -484,7 +440,7 @@ class ReportServiceTest {
 
         Map<String, Map<LocalDate, Double>> exerciseData = new HashMap<>();
         Map<LocalDate, Double> paramData = new LinkedHashMap<>();
-        paramData.put(now, 100.0); // только одна точка
+        paramData.put(now, 100.0);
         exerciseData.put("Вес (кг)", paramData);
         incompleteExercisesData.put("Приседания", exerciseData);
 
@@ -510,10 +466,8 @@ class ReportServiceTest {
                 anyMap()
         );
 
-        // When
         byte[] result = reportService.generateTrainingReport(cadetId, from, to, types);
 
-        // Then
         assertNotNull(result);
         assertArrayEquals(expectedPdf, result);
 
@@ -522,7 +476,6 @@ class ReportServiceTest {
 
     @Test
     void generateTrainingReport_WhenPdfServiceThrowsException_ShouldThrowRuntimeException() throws Exception {
-        // Given
         Long cadetId = 1L;
 
         when(cadetRepository.findById(cadetId)).thenReturn(Optional.of(testCadet));
@@ -549,7 +502,6 @@ class ReportServiceTest {
                 anyMap()
         );
 
-        // When & Then
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> reportService.generateTrainingReport(cadetId, from, to, types)
@@ -558,11 +510,8 @@ class ReportServiceTest {
         assertTrue(exception.getMessage().contains("Ошибка при генерации PDF отчета"));
     }
 
-    // ============= ТЕСТЫ ДЛЯ buildFullName =============
-
     @Test
     void buildFullName_WithAllFields_ShouldReturnFullName() throws Exception {
-        // Given
         Long cadetId = 1L;
         byte[] expectedPdf = "PDF content".getBytes();
 
@@ -592,16 +541,13 @@ class ReportServiceTest {
                 anyMap()
         );
 
-        // When
         reportService.generateTrainingReport(cadetId, from, to, types);
 
-        // Then
         assertEquals("Иванов Иван Иванович", nameCaptor.getValue());
     }
 
     @Test
     void buildFullName_WithoutPatronymic_ShouldReturnNameWithoutPatronymic() throws Exception {
-        // Given
         Long cadetId = 1L;
         testUser.setPatronymic(null);
         byte[] expectedPdf = "PDF content".getBytes();
@@ -632,18 +578,13 @@ class ReportServiceTest {
                 anyMap()
         );
 
-        // When
         reportService.generateTrainingReport(cadetId, from, to, types);
 
-        // Then
         assertEquals("Иванов Иван", nameCaptor.getValue());
     }
 
-    // ============= ТЕСТЫ ДЛЯ getUniversityName =============
-
     @Test
     void getUniversityName_WhenUserHasUniversity_ShouldReturnUniversityCode() throws Exception {
-        // Given
         Long cadetId = 1L;
         byte[] expectedPdf = "PDF content".getBytes();
 
@@ -673,16 +614,13 @@ class ReportServiceTest {
                 anyMap()
         );
 
-        // When
         reportService.generateTrainingReport(cadetId, from, to, types);
 
-        // Then
         assertEquals("Военная академия", uniCaptor.getValue());
     }
 
     @Test
     void getUniversityName_WhenUserHasNoUniversity_ShouldReturnDefault() throws Exception {
-        // Given
         Long cadetId = 1L;
         testUser.setUniversity(null);
         byte[] expectedPdf = "PDF content".getBytes();
@@ -713,12 +651,8 @@ class ReportServiceTest {
                 anyMap()
         );
 
-        // When
         reportService.generateTrainingReport(cadetId, from, to, types);
 
-        // Then
         assertEquals("Военная академия", uniCaptor.getValue());
     }
-
-
 }

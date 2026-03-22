@@ -47,8 +47,6 @@ public class TrainingService {
     @Autowired
     private GroupRepository groupRepository;
 
-    // ============= ПРОСМОТР ТРЕНИРОВОК =============
-
     @Transactional(readOnly = true)
     public Page<TrainingDto> getTrainings(UserDetails userDetails,
                                           LocalDate date,
@@ -61,7 +59,6 @@ public class TrainingService {
                 userDetails != null ? userDetails.getUsername() : null, date, dateFrom, dateTo, type,
                 pageable.getPageNumber(), pageable.getPageSize());
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка получения тренировок с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -122,7 +119,6 @@ public class TrainingService {
         log.info("Получение тренировки по ID: {}, пользователь: {}", trainingId,
                 userDetails != null ? userDetails.getUsername() : null);
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка получения тренировки с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -146,15 +142,12 @@ public class TrainingService {
         return convertToDto(training);
     }
 
-    // ============= РЕДАКТИРОВАНИЕ ТРЕНИРОВКИ =============
-
     @Transactional
     public void updateTraining(UserDetails userDetails, Long trainingId, UpdateTrainingRequest request) {
 
         log.info("Обновление тренировки: trainingId={}, user={}", trainingId,
                 userDetails != null ? userDetails.getUsername() : null);
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка обновления тренировки с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -180,7 +173,6 @@ public class TrainingService {
         log.debug("Текущие данные тренировки: дата={}, тип={}, вес={}, отдых={}",
                 training.getDate(), training.getType(), training.getCurrentWeight(), training.getRestPeriod());
 
-        // Обновляем основные поля
         if (request.getDate() != null) {
             log.debug("Обновление даты: {} -> {}", training.getDate(), request.getDate());
             if (request.getDate().isAfter(LocalDate.now())) {
@@ -209,7 +201,6 @@ public class TrainingService {
             training.setRestPeriod(request.getRestPeriod().shortValue());
         }
 
-        // Обновляем упражнения
         if (request.getExercises() != null && !request.getExercises().isEmpty()) {
             log.debug("Обновление {} упражнений", request.getExercises().size());
             int exerciseCounter = 0;
@@ -289,15 +280,12 @@ public class TrainingService {
         log.info("Тренировка {} успешно обновлена", trainingId);
     }
 
-    // ============= УДАЛЕНИЕ ТРЕНИРОВКИ (ТОЛЬКО ДЛЯ КУРСАНТА) =============
-
     @Transactional
     public void deleteTraining(UserDetails userDetails, Long trainingId) {
 
         log.info("Удаление тренировки: trainingId={}, user={}", trainingId,
                 userDetails != null ? userDetails.getUsername() : null);
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка удаления тренировки с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -308,7 +296,6 @@ public class TrainingService {
             throw new IllegalArgumentException("ID тренировки должен быть положительным числом");
         }
 
-        // Проверяем, что пользователь - курсант
         if (userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_CADET"))) {
             log.warn("Попытка удаления тренировки пользователем без роли CADET");
             throw new RuntimeException("Только курсант может удалять свои тренировки");
@@ -333,8 +320,6 @@ public class TrainingService {
             throw new RuntimeException("Ошибка при удалении тренировки: " + e.getMessage());
         }
     }
-
-    // ============= ПОЛУЧЕНИЕ УПРАЖНЕНИЙ ПО ТИПУ =============
 
     @Transactional(readOnly = true)
     public List<ExerciseCatalogDto> getExercisesByType(String type) {
@@ -403,8 +388,6 @@ public class TrainingService {
         return convertExerciseToDto(exercise);
     }
 
-    // ============= МЕТОД ДЛЯ ПРЕПОДАВАТЕЛЯ =============
-
     @Transactional(readOnly = true)
     public Page<TrainingDto> getTrainingsByCadetId(UserDetails userDetails, Long cadetId,
                                                    LocalDate date, LocalDate dateFrom,
@@ -414,7 +397,6 @@ public class TrainingService {
         log.info("Получение тренировок курсанта преподавателем: cadetId={}, user={}, date={}, dateFrom={}, dateTo={}, type={}",
                 cadetId, userDetails != null ? userDetails.getUsername() : null, date, dateFrom, dateTo, type);
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка получения тренировок с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -440,7 +422,6 @@ public class TrainingService {
             throw new IllegalArgumentException("Некорректный тип тренировки: " + type);
         }
 
-        // Проверяем, что преподаватель имеет доступ к этому курсанту
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
                 .orElseThrow(() -> {
                     log.warn("Преподаватель не найден: {}", userDetails.getUsername());
@@ -477,7 +458,6 @@ public class TrainingService {
 
         log.debug("Доступ разрешен, получение тренировок курсанта {}", cadetId);
 
-        // Используем те же методы репозитория
         Page<Training> trainings;
         try {
             if (type != null && dateFrom != null && dateTo != null) {
@@ -507,8 +487,6 @@ public class TrainingService {
 
         return trainings.map(this::convertToDto);
     }
-
-    // ============= ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ =============
 
     private Long getCadetId(UserDetails userDetails) {
         if (userDetails == null || userDetails.getUsername() == null) {
@@ -546,7 +524,6 @@ public class TrainingService {
         }
 
         if (userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CADET"))) {
-            // Курсант может смотреть только свои тренировки
             log.debug("Проверка доступа для курсанта");
             Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
                     .orElseThrow(() -> {
@@ -565,7 +542,6 @@ public class TrainingService {
             }
             log.debug("Доступ курсанта разрешен");
         } else {
-            // Преподаватель может смотреть тренировки курсантов своей группы
             log.debug("Проверка доступа для преподавателя");
             Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
                     .orElseThrow(() -> {

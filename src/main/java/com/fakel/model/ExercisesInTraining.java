@@ -21,7 +21,7 @@ public class ExercisesInTraining {
     private ExerciseCatalog exerciseCatalog;
 
     @Column(name = "rest_period")
-    private Short restPeriod;  // ← ИСПРАВЛЕНО: Integer → Short
+    private Short restPeriod;
 
     @OneToMany(mappedBy = "exerciseInTraining", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Approach> approaches = new ArrayList<>();
@@ -36,8 +36,8 @@ public class ExercisesInTraining {
     public ExerciseCatalog getExerciseCatalog() { return exerciseCatalog; }
     public void setExerciseCatalog(ExerciseCatalog exerciseCatalog) { this.exerciseCatalog = exerciseCatalog; }
 
-    public Short getRestPeriod() { return restPeriod; }  // ← ИСПРАВЛЕНО
-    public void setRestPeriod(Short restPeriod) { this.restPeriod = restPeriod; }  // ← ИСПРАВЛЕНО
+    public Short getRestPeriod() { return restPeriod; }
+    public void setRestPeriod(Short restPeriod) { this.restPeriod = restPeriod; }
 
     public List<Approach> getApproaches() { return approaches; }
     public void setApproaches(List<Approach> approaches) { this.approaches = approaches; }

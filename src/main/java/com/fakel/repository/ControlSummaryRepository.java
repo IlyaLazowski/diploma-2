@@ -15,7 +15,6 @@ public interface ControlSummaryRepository extends JpaRepository<ControlSummary, 
     // Все итоги по контролю
     List<ControlSummary> findByControlId(Long controlId);
 
-    // ⚠️ ИСПРАВЛЕНО: используем правильное имя поля
     @Query("SELECT cs FROM ControlSummary cs WHERE cs.control.id = :controlId AND cs.cadet.userId = :cadetId")
     Optional<ControlSummary> findByControlIdAndCadetId(@Param("controlId") Long controlId,
                                                        @Param("cadetId") Long cadetId);
