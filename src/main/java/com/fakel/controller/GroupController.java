@@ -1,8 +1,13 @@
 package com.fakel.controller;
+
 import com.fakel.dto.*;
-import jakarta.validation.Valid;  // для @Valid
+import com.fakel.model.Control;
+import com.fakel.model.Teacher;
+import com.fakel.repository.ControlRepository;
+import com.fakel.repository.TeacherRepository;
 import com.fakel.service.ControlService;
 import com.fakel.service.GroupService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,9 +18,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDate;
 import java.util.List;
-import com.fakel.dto.UpdateControlResultsRequest;
+
 @RestController
 @RequestMapping("/api")
 public class GroupController {
@@ -25,6 +31,12 @@ public class GroupController {
 
     @Autowired
     private ControlService controlService;
+
+    @Autowired
+    private ControlRepository controlRepository;
+
+    @Autowired
+    private TeacherRepository teacherRepository;
 
 
     @GetMapping("/groups")
@@ -181,5 +193,36 @@ public class GroupController {
         controlService.updateControlResults(userDetails, request);
     }
 
+
+    /**
+     * GET /api/groups/{groupId}/controls/{controlId}/full-details
+     * Получить полные результаты контроля с расширенной информацией
+     */
+    @GetMapping("/groups/{groupId}/controls/{controlId}/full-details")
+    @PreAuthorize("hasRole('TEACHER')")
+    public ControlFullDetailsDto getControlFullDetails(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long groupId,
+            @PathVariable Long controlId) {
+
+        // Получаем контроль напрямую через репозиторий
+        Control control = controlRepository.findById(controlId)
+                .orElseThrow(() -> new RuntimeException("Контроль не найден"));
+
+        // Проверяем, что контроль принадлежит группе
+        if (!control.getGroup().getId().equals(groupId)) {
+            throw new RuntimeException("Контроль не принадлежит указанной группе");
+        }
+
+        // Проверяем доступ преподавателя
+        Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
+
+        if (!control.getGroup().getUniversity().getId().equals(teacher.getUniversity().getId())) {
+            throw new RuntimeException("Нет доступа к этому контролю");
+        }
+
+        return controlService.getControlFullDetails(controlId, userDetails);
+    }
 
 }

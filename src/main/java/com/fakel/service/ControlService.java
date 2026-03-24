@@ -1000,4 +1000,214 @@ public class ControlService {
         log.info("Обновление результатов контроля {} завершено (обработано {} записей)",
                 control.getId(), request.getUpdates().size());
     }
+
+
+    /**
+     * Получить полные результаты контроля с расширенной информацией
+     */
+    public ControlFullDetailsDto getControlFullDetails(Long controlId, UserDetails userDetails) {
+
+        log.info("Получение полных результатов контроля: controlId={}, user={}",
+                controlId, userDetails != null ? userDetails.getUsername() : null);
+
+        if (userDetails == null || userDetails.getUsername() == null) {
+            log.warn("Попытка получения результатов с null userDetails");
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (controlId == null || controlId <= 0) {
+            log.warn("Некорректный ID контроля: {}", controlId);
+            throw new IllegalArgumentException("ID контроля должен быть положительным числом");
+        }
+
+        // Проверка доступа
+        Control control = controlRepository.findById(controlId)
+                .orElseThrow(() -> new RuntimeException("Контроль не найден"));
+
+        if (userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CADET"))) {
+            Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Курсант не найден"));
+            if (!control.getGroup().getId().equals(cadet.getGroupId())) {
+                throw new RuntimeException("Нет доступа к этому контролю");
+            }
+        } else {
+            Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
+            if (!control.getGroup().getUniversity().getId().equals(teacher.getUniversity().getId())) {
+                throw new RuntimeException("Нет доступа к этому контролю");
+            }
+        }
+
+        // Создаем ответ
+        ControlFullDetailsDto result = new ControlFullDetailsDto();
+
+        // Заполняем информацию о контроле
+        result.setControlId(control.getId());
+        result.setControlType(control.getType());
+        result.setControlDate(control.getDate());
+
+        // Заполняем информацию о группе
+        Group group = control.getGroup();
+        result.setGroupId(group.getId());
+        result.setGroupNumber(group.getNumber());
+        result.setGroupFoundationDate(group.getFoundationDate());
+
+        // Заполняем информацию об инспекторах
+        List<Inspector> inspectors = inspectorRepository.findByControlId(controlId);
+        List<ControlFullDetailsDto.InspectorInfoDto> inspectorDtos = inspectors.stream()
+                .map(this::convertToInspectorInfoDto)
+                .collect(Collectors.toList());
+        result.setInspectors(inspectorDtos);
+
+        // Получаем всех курсантов группы
+        List<Cadet> allCadets = cadetRepository.findByGroupId(group.getId());
+
+        // Получаем результаты
+        List<ControlResult> results = controlResultRepository.findByControlId(controlId);
+        Map<Long, List<ControlResult>> resultsByCadet = results.stream()
+                .collect(Collectors.groupingBy(r -> r.getCadet().getUserId()));
+
+        // Получаем итоговые оценки
+        List<ControlSummary> summaries = controlSummaryRepository.findByControlId(controlId);
+        Map<Long, Short> finalMarks = summaries.stream()
+                .collect(Collectors.toMap(
+                        cs -> cs.getCadet().getUserId(),
+                        ControlSummary::getFinalMark,
+                        (existing, replacement) -> existing
+                ));
+
+        // Формируем результаты по курсантам
+        List<CadetFullResultDto> cadetResults = new ArrayList<>();
+        ControlFullDetailsDto.ControlStatisticsDto statistics = new ControlFullDetailsDto.ControlStatisticsDto();
+
+        // Инициализируем счетчики
+        int presentCount = 0;
+        int sickCount = 0;
+        int dutyCount = 0;
+        int guardhouseCount = 0;
+        int excellentCount = 0;
+        int goodCount = 0;
+        int satisfactoryCount = 0;
+        int unsatisfactoryCount = 0;
+        double totalMarkSum = 0;
+        int totalMarkCount = 0;
+
+        for (Cadet cadet : allCadets) {
+            CadetFullResultDto cadetDto = new CadetFullResultDto();
+            cadetDto.setCadetId(cadet.getUserId());
+            cadetDto.setFullName(cadet.getUser().getLastName() + " " +
+                    cadet.getUser().getFirstName() +
+                    (cadet.getUser().getPatronymic() != null ? " " + cadet.getUser().getPatronymic() : ""));
+            cadetDto.setMilitaryRank(cadet.getMilitaryRank());
+            cadetDto.setPost(cadet.getPost());
+            cadetDto.setCourse(cadet.getCourse() != null ? cadet.getCourse().intValue() : null);
+
+            List<ControlResult> cadetResultsList = resultsByCadet.get(cadet.getUserId());
+
+            if (cadetResultsList != null && !cadetResultsList.isEmpty()) {
+                String status = cadetResultsList.get(0).getStatus();
+                cadetDto.setStatus(status);
+
+                // Считаем статистику по статусам
+                if ("Присутствует".equals(status)) presentCount++;
+                else if ("Болен".equals(status)) sickCount++;
+                else if ("Командировка".equals(status)) dutyCount++;
+                else if ("Гауптвахта".equals(status)) guardhouseCount++;
+
+                List<StandardResultDetailDto> standardDtos = cadetResultsList.stream()
+                        .map(r -> {
+                            String grade = convertMarkToGrade(r.getMark());
+                            return new StandardResultDetailDto(
+                                    r.getStandard().getNumber().intValue(),
+                                    r.getStandard().getName(),
+                                    r.getMark(),
+                                    grade,
+                                    r.getStandard().getMeasurementUnit() != null ?
+                                            r.getStandard().getMeasurementUnit().getCode() : null
+                            );
+                        })
+                        .collect(Collectors.toList());
+                cadetDto.setStandards(standardDtos);
+
+                Short finalMark = finalMarks.get(cadet.getUserId());
+                cadetDto.setFinalMark(finalMark);
+                cadetDto.setFinalGrade(convertMarkToFinalGrade(finalMark));
+
+                // Считаем статистику по итоговым оценкам
+                if (finalMark != null) {
+                    totalMarkSum += finalMark;
+                    totalMarkCount++;
+
+                    if (finalMark >= 8 && finalMark <= 10) excellentCount++;
+                    else if (finalMark >= 6 && finalMark <= 7) goodCount++;
+                    else if (finalMark >= 4 && finalMark <= 5) satisfactoryCount++;
+                    else if (finalMark >= 1 && finalMark <= 3) unsatisfactoryCount++;
+                }
+            } else {
+                cadetDto.setStatus("Не явился");
+                cadetDto.setStandards(new ArrayList<>());
+                cadetDto.setFinalMark(null);
+                cadetDto.setFinalGrade("Не сдавал");
+                presentCount++; // Не явившиеся считаем как отсутствующие на сдаче
+            }
+
+            cadetResults.add(cadetDto);
+        }
+
+        // Сортируем по ФИО
+        cadetResults.sort(Comparator.comparing(CadetFullResultDto::getFullName));
+        result.setCadetResults(cadetResults);
+
+        // Заполняем статистику
+        statistics.setTotalCadets(allCadets.size());
+        statistics.setPresentCount(presentCount);
+        statistics.setSickCount(sickCount);
+        statistics.setDutyCount(dutyCount);
+        statistics.setGuardhouseCount(guardhouseCount);
+        statistics.setAbsentCount(allCadets.size() - (presentCount + sickCount + dutyCount + guardhouseCount));
+        statistics.setAverageMark(totalMarkCount > 0 ? Math.round(totalMarkSum / totalMarkCount * 10.0) / 10.0 : 0.0);
+        statistics.setExcellentCount(excellentCount);
+        statistics.setGoodCount(goodCount);
+        statistics.setSatisfactoryCount(satisfactoryCount);
+        statistics.setUnsatisfactoryCount(unsatisfactoryCount);
+
+        result.setStatistics(statistics);
+
+        log.info("Сформированы результаты для {} курсантов", cadetResults.size());
+        return result;
+    }
+
+    // Вспомогательные методы
+    private ControlFullDetailsDto.InspectorInfoDto convertToInspectorInfoDto(Inspector inspector) {
+        String rank = null;
+        if (inspector.getTeacher() != null && inspector.getTeacher().getMilitaryRank() != null) {
+            rank = inspector.getTeacher().getMilitaryRank();
+        }
+
+        return new ControlFullDetailsDto.InspectorInfoDto(
+                inspector.getId(),
+                inspector.getFullName(),
+                inspector.getExternal(),
+                rank
+        );
+    }
+
+    private String convertMarkToGrade(Short mark) {
+        if (mark == null) return "Не оценено";
+        switch (mark) {
+            case 5: return "Отлично";
+            case 4: return "Хорошо";
+            case 3: return "Удовлетворительно";
+            default: return "Неудовлетворительно";
+        }
+    }
+
+    private String convertMarkToFinalGrade(Short mark) {
+        if (mark == null) return "Не сдавал";
+        if (mark >= 8 && mark <= 10) return "Отлично";
+        if (mark >= 6 && mark <= 7) return "Хорошо";
+        if (mark >= 4 && mark <= 5) return "Удовлетворительно";
+        if (mark >= 1 && mark <= 3) return "Неудовлетворительно";
+        return "Не определено";
+    }
 }
