@@ -32,4 +32,7 @@ public interface ControlRepository extends JpaRepository<Control, Long> {
     Long countByGroupId(Long groupId);
 
     List<Control> findByGroupId(Long groupId);
+
+    @Query("SELECT COUNT(DISTINCT cr.cadet.userId) FROM ControlResult cr WHERE cr.control.id = :controlId")
+    Long countDistinctCadetsByControlId(@Param("controlId") Long controlId);
 }

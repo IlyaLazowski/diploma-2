@@ -24,7 +24,7 @@ public interface ControlResultRepository extends JpaRepository<ControlResult, Lo
 
     Long countByControlId(Long controlId);
 
-    @Query("SELECT COUNT(cr) FROM ControlResult cr WHERE cr.control.id = :controlId AND cr.mark >= 3")
+    @Query("SELECT COUNT(DISTINCT cr.cadet.userId) FROM ControlResult cr WHERE cr.control.id = :controlId AND cr.mark >= 3")
     Long countPassedByControlId(@Param("controlId") Long controlId);
 
     @Query("SELECT AVG(cr.mark) FROM ControlResult cr WHERE cr.control.id = :controlId")
@@ -34,4 +34,8 @@ public interface ControlResultRepository extends JpaRepository<ControlResult, Lo
     List<Object[]> getStatusStatistics(@Param("controlId") Long controlId);
 
     List<ControlResult> findByControlIdAndMarkGreaterThanEqual(Long controlId, Short mark);
+    @Query("SELECT COUNT(DISTINCT cr.cadet.userId) FROM ControlResult cr WHERE cr.control.id = :controlId")
+    Long countDistinctCadetsByControlId(@Param("controlId") Long controlId);
+
+
 }

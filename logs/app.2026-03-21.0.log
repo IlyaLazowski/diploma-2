@@ -1,0 +1,77 @@
+2026-03-21T19:01:53.346+03:00  INFO 1720 --- [main] com.fakel.FakelApplication               : Starting FakelApplication using Java 24.0.2 with PID 1720 (C:\Users\ilya\Desktop\diploma-main\target\classes started by ilya in C:\Users\ilya\Desktop\diploma-main)
+2026-03-21T19:01:53.355+03:00 DEBUG 1720 --- [main] com.fakel.FakelApplication               : Running with Spring Boot v3.4.4, Spring v6.2.5
+2026-03-21T19:01:53.356+03:00  INFO 1720 --- [main] com.fakel.FakelApplication               : No active profile set, falling back to 1 default profile: "default"
+2026-03-21T19:01:54.820+03:00  INFO 1720 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-21T19:01:55.028+03:00  INFO 1720 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 180 ms. Found 20 JPA repository interfaces.
+2026-03-21T19:01:56.674+03:00  INFO 1720 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-21T19:01:56.705+03:00  INFO 1720 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-21T19:01:56.705+03:00  INFO 1720 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2026-03-21T19:01:56.825+03:00  INFO 1720 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-21T19:01:56.825+03:00  INFO 1720 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3381 ms
+2026-03-21T19:01:57.381+03:00  INFO 1720 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-21T19:01:57.526+03:00  INFO 1720 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2026-03-21T19:01:57.598+03:00  INFO 1720 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-03-21T19:01:58.213+03:00  INFO 1720 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-21T19:01:58.281+03:00  INFO 1720 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-21T19:01:58.696+03:00  INFO 1720 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7cd1ec54
+2026-03-21T19:01:58.699+03:00  INFO 1720 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-21T19:01:58.806+03:00  WARN 1720 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-21T19:01:58.845+03:00  INFO 1720 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-21T19:02:01.435+03:00  INFO 1720 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-21T19:02:01.614+03:00  INFO 1720 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-21T19:02:02.123+03:00  INFO 1720 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-21T19:02:03.261+03:00 DEBUG 1720 --- [main] c.f.security.JwtAuthenticationFilter     : Filter 'jwtAuthenticationFilter' configured for use
+2026-03-21T19:02:03.679+03:00  INFO 1720 --- [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-21T19:02:03.680+03:00  WARN 1720 --- [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-21T19:02:04.871+03:00  INFO 1720 --- [main] c.fakel.service.PasswordEncoderService   : Запуск процедуры кодирования паролей всех пользователей
+2026-03-21T19:02:05.162+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь ivan.i1503: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.163+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь petr.p2207: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.163+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь sido.a0511: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.163+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь smir.d1204: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.164+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь kuzn.m3009: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.164+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь popo.a1806: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.164+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь vasi.n2512: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.164+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь zait.a0702: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.164+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь pavl.v1908: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.164+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь novi.k0305: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.166+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь fedo.r1410: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.166+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь moro.g2801: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.166+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь volk.t0906: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.166+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь alek.d2111: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.166+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь lebe.k1604: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.166+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь seme.e0207: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.166+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь kozl.m1309: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.167+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь mikh.ya2505: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.167+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь tara.a0712: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.167+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь belo.d1903: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.167+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь koma.l3008: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.167+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь orlo.m1102: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.167+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь kise.a2310: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.168+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь soko.m0506: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.168+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь grig.v1701: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.168+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь fomi.n2907: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.168+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь davy.s0804: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.168+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь tito.g2009: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.168+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь voro.i0212: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.168+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь cher.a1406: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.168+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь soko.a: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.168+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь vasi.e: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.169+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь moro.d: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.169+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь kryl.a: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.169+03:00 DEBUG 1720 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь grom.a: пароль уже зашифрован, пропускаем
+2026-03-21T19:02:05.169+03:00  INFO 1720 --- [main] c.fakel.service.PasswordEncoderService   : Кодирование паролей завершено. Всего обработано: 35, закодировано: 0, пропущено: 35, ошибок: 0
+2026-03-21T19:02:05.209+03:00  WARN 1720 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-21T19:02:06.326+03:00  INFO 1720 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-03-21T19:02:06.341+03:00  INFO 1720 --- [main] com.fakel.FakelApplication               : Started FakelApplication in 13.829 seconds (process running for 14.34)
+2026-03-21T19:02:08.919+03:00  INFO 1720 --- [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-21T19:02:08.942+03:00  INFO 1720 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-03-21T19:02:08.952+03:00  INFO 1720 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-21T19:02:08.956+03:00  INFO 1720 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-03-21T19:02:08.962+03:00  INFO 1720 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

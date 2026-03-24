@@ -70,7 +70,6 @@ public class ControlService {
                 groupId, userDetails != null ? userDetails.getUsername() : null, dateFrom, dateTo, type,
                 pageable.getPageNumber(), pageable.getPageSize());
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка получения контролей с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -105,7 +104,6 @@ public class ControlService {
 
         Page<Control> controls = getFilteredControls(groupId, dateFrom, dateTo, type, pageable);
         log.info("Найдено {} контролей для группы {}", controls.getTotalElements(), groupId);
-        log.debug("Всего страниц: {}", controls.getTotalPages());
 
         return controls.map(this::convertToDto);
     }
@@ -114,7 +112,6 @@ public class ControlService {
         log.info("Получение контроля по ID: {}, пользователь: {}", controlId,
                 userDetails != null ? userDetails.getUsername() : null);
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка получения контроля с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -142,9 +139,6 @@ public class ControlService {
             throw new RuntimeException("Нет доступа к этому контролю");
         }
 
-        log.debug("Контроль найден: тип={}, дата={}, группа={}",
-                control.getType(), control.getDate(), control.getGroup().getNumber());
-
         return convertToDto(control);
     }
 
@@ -161,7 +155,6 @@ public class ControlService {
                 userDetails != null ? userDetails.getUsername() : null, dateFrom, dateTo, type,
                 pageable.getPageNumber(), pageable.getPageSize());
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка получения контролей с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -182,16 +175,11 @@ public class ControlService {
         log.debug("Курсант {} из группы {}", cadet.getUserId(), groupId);
 
         List<Control> allControls = controlRepository.findByGroupId(groupId);
-        log.debug("Всего контролей в группе: {}", allControls.size());
-
         List<Control> filteredControls = allControls.stream()
                 .filter(c -> filterByDate(c, dateFrom, dateTo))
                 .filter(c -> filterByType(c, type))
+                .sorted((c1, c2) -> c2.getDate().compareTo(c1.getDate()))
                 .collect(Collectors.toList());
-
-        log.debug("После фильтрации осталось контролей: {}", filteredControls.size());
-
-        filteredControls.sort((c1, c2) -> c2.getDate().compareTo(c1.getDate()));
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), filteredControls.size());
@@ -210,7 +198,6 @@ public class ControlService {
         log.info("Получение контроля курсантом: controlId={}, user={}", controlId,
                 userDetails != null ? userDetails.getUsername() : null);
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка получения контроля с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -238,8 +225,6 @@ public class ControlService {
             throw new RuntimeException("Нет доступа к этому контролю");
         }
 
-        log.debug("Контроль найден: тип={}, дата={}", control.getType(), control.getDate());
-
         return convertToDto(control);
     }
 
@@ -253,19 +238,15 @@ public class ControlService {
             Pageable pageable) {
 
         if (type != null && dateFrom != null && dateTo != null) {
-            log.debug("Поиск контролей по группе {}, типу {} и датам {} - {}", groupId, type, dateFrom, dateTo);
             return controlRepository.findByGroupIdAndTypeAndDateBetweenOrderByDateDesc(
                     groupId, type, dateFrom, dateTo, pageable);
         } else if (type != null) {
-            log.debug("Поиск контролей по группе {} и типу {}", groupId, type);
             return controlRepository.findByGroupIdAndTypeOrderByDateDesc(
                     groupId, type, pageable);
         } else if (dateFrom != null && dateTo != null) {
-            log.debug("Поиск контролей по группе {} и датам {} - {}", groupId, dateFrom, dateTo);
             return controlRepository.findByGroupIdAndDateBetweenOrderByDateDesc(
                     groupId, dateFrom, dateTo, pageable);
         } else {
-            log.debug("Поиск всех контролей группы {}", groupId);
             return controlRepository.findByGroupIdOrderByDateDesc(groupId, pageable);
         }
     }
@@ -289,15 +270,33 @@ public class ControlService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Получить нормативы для контроля - ВСЕ варианты для каждого номера
+     */
+    private List<StandardDto> getStandardsForControl(Long controlId) {
+        List<Short> numbers = controlStandardRepository.findStandardNumbersByControlId(controlId);
+        List<StandardDto> standardDtos = new ArrayList<>();
+
+        for (Short number : numbers) {
+            // Загружаем ВСЕ нормативы с этим номером
+            List<Standard> standards = standardRepository.findByNumber(number);
+            for (Standard standard : standards) {
+                standardDtos.add(convertStandardToDto(standard));
+            }
+        }
+
+        return standardDtos;
+    }
 
     private List<Standard> getStandardsFromNumbers(List<Short> numbers) {
         return numbers.stream()
-                .map(num -> standardRepository.findFirstByNumber(num).orElse(null))
-                .filter(Objects::nonNull)
+                .flatMap(num -> standardRepository.findByNumber(num).stream())
                 .collect(Collectors.toList());
     }
 
-
+    /**
+     * Получить результаты контроля для курсанта
+     */
     public Page<ControlResultDto> getControlResultsForCadet(
             UserDetails userDetails,
             Long controlId,
@@ -306,7 +305,6 @@ public class ControlService {
         log.info("Получение результатов контроля для курсанта: controlId={}, user={}",
                 controlId, userDetails != null ? userDetails.getUsername() : null);
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка получения результатов с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -365,6 +363,22 @@ public class ControlService {
         );
     }
 
+    private StandardDto convertStandardToDto(Standard standard) {
+        if (standard == null) return null;
+
+        return new StandardDto(
+                standard.getId(),
+                standard.getNumber(),
+                standard.getName(),
+                standard.getMeasurementUnit() != null ? standard.getMeasurementUnit().getCode() : null,
+                standard.getCourse(),
+                standard.getGrade(),
+                standard.getTimeValue(),
+                standard.getIntValue(),
+                standard.getWeightCategory()
+        );
+    }
+
     private ControlDto convertToDto(Control control) {
         log.trace("Конвертация контроля {} в DTO", control.getId());
 
@@ -374,22 +388,8 @@ public class ControlService {
 
         List<InspectorDto> inspectors = getInspectorsForControl(control.getId());
 
-        List<Short> numbers = controlStandardRepository.findStandardNumbersByControlId(control.getId());
-        List<Standard> standards = getStandardsFromNumbers(numbers);
-
-        List<StandardDto> standardDtos = standards.stream()
-                .map(s -> new StandardDto(
-                        s.getId(),
-                        s.getNumber(),
-                        s.getName(),
-                        s.getMeasurementUnit().getCode(),
-                        s.getCourse(),
-                        s.getGrade(),
-                        s.getTimeValue(),
-                        s.getIntValue(),
-                        s.getWeightCategory()
-                ))
-                .collect(Collectors.toList());
+        // ✅ ИСПРАВЛЕНО: загружаем ВСЕ нормативы для каждого номера
+        List<StandardDto> standardDtos = getStandardsForControl(control.getId());
 
         return new ControlDto(
                 control.getId(),
@@ -406,13 +406,14 @@ public class ControlService {
         );
     }
 
-
+    /**
+     * Получить полные результаты контроля
+     */
     public List<ControlSummaryDto> getControlFullResults(Long controlId, UserDetails userDetails) {
 
         log.info("Получение полных результатов контроля: controlId={}, user={}",
                 controlId, userDetails != null ? userDetails.getUsername() : null);
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка получения результатов с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -423,50 +424,30 @@ public class ControlService {
             throw new IllegalArgumentException("ID контроля должен быть положительным числом");
         }
 
+        // Проверка доступа
         if (userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CADET"))) {
             Cadet cadet = cadetRepository.findByUserLogin(userDetails.getUsername())
-                    .orElseThrow(() -> {
-                        log.warn("Курсант не найден: {}", userDetails.getUsername());
-                        return new RuntimeException("Курсант не найден");
-                    });
+                    .orElseThrow(() -> new RuntimeException("Курсант не найден"));
             Control control = controlRepository.findById(controlId)
-                    .orElseThrow(() -> {
-                        log.warn("Контроль не найден: {}", controlId);
-                        return new RuntimeException("Контроль не найден");
-                    });
+                    .orElseThrow(() -> new RuntimeException("Контроль не найден"));
             if (!control.getGroup().getId().equals(cadet.getGroupId())) {
-                log.warn("Нет доступа к результатам контроля {} для курсанта {}", controlId, cadet.getUserId());
                 throw new RuntimeException("Нет доступа к этому контролю");
             }
         } else {
             Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
-                    .orElseThrow(() -> {
-                        log.warn("Преподаватель не найден: {}", userDetails.getUsername());
-                        return new RuntimeException("Преподаватель не найден");
-                    });
+                    .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
             Control control = controlRepository.findById(controlId)
-                    .orElseThrow(() -> {
-                        log.warn("Контроль не найден: {}", controlId);
-                        return new RuntimeException("Контроль не найден");
-                    });
-
+                    .orElseThrow(() -> new RuntimeException("Контроль не найден"));
             if (!control.getGroup().getUniversity().getId().equals(teacher.getUniversity().getId())) {
-                log.warn("Нет доступа к результатам контроля {} для преподавателя {}", controlId, teacher.getUserId());
                 throw new RuntimeException("Нет доступа к этому контролю");
             }
         }
 
         Control control = controlRepository.findById(controlId)
-                .orElseThrow(() -> {
-                    log.warn("Контроль не найден: {}", controlId);
-                    return new RuntimeException("Контроль не найден");
-                });
+                .orElseThrow(() -> new RuntimeException("Контроль не найден"));
 
         List<Cadet> allCadets = cadetRepository.findByGroupId(control.getGroup().getId());
-        log.debug("Всего курсантов в группе: {}", allCadets.size());
-
         List<ControlResult> results = controlResultRepository.findByControlId(controlId);
-        log.debug("Всего результатов по контролю: {}", results.size());
 
         Map<Long, List<ControlResult>> resultsByCadet = results.stream()
                 .collect(Collectors.groupingBy(r -> r.getCadet().getUserId()));
@@ -506,7 +487,6 @@ public class ControlService {
                         ))
                         .collect(Collectors.toList());
                 dto.setStandards(standards);
-
                 dto.setFinalMark(finalMarks.get(cadet.getUserId()));
             } else {
                 String status = statusMap.get(cadet.getUserId());
@@ -519,12 +499,13 @@ public class ControlService {
         }
 
         result.sort(Comparator.comparing(ControlSummaryDto::getFullName));
-
         log.info("Сформированы результаты для {} курсантов", result.size());
         return result;
     }
 
-
+    /**
+     * Отправка результатов по номерам нормативов
+     */
     @Transactional
     public void submitRawResults(UserDetails userDetails, SubmitRawResultsRequest request) {
 
@@ -532,7 +513,6 @@ public class ControlService {
                 request != null ? request.getControlId() : null,
                 userDetails != null ? userDetails.getUsername() : null);
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка отправки результатов с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -554,16 +534,10 @@ public class ControlService {
         }
 
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
-                .orElseThrow(() -> {
-                    log.warn("Преподаватель не найден: {}", userDetails.getUsername());
-                    return new RuntimeException("Преподаватель не найден");
-                });
+                .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
 
         Control control = controlRepository.findById(request.getControlId())
-                .orElseThrow(() -> {
-                    log.warn("Контроль не найден: {}", request.getControlId());
-                    return new RuntimeException("Контроль не найден");
-                });
+                .orElseThrow(() -> new RuntimeException("Контроль не найден"));
 
         if (!control.getGroup().getUniversity().getId().equals(teacher.getUniversity().getId())) {
             log.warn("Нет доступа к контролю {} для преподавателя {}", request.getControlId(), teacher.getUserId());
@@ -579,7 +553,6 @@ public class ControlService {
 
         log.debug("Ожидаемые нормативы: {}", expectedNumbers);
 
-        // Список допустимых статусов
         List<String> validStatuses = Arrays.asList(
                 "Присутствует", "Болен", "Командировка", "Гауптвахта"
         );
@@ -598,15 +571,11 @@ public class ControlService {
             }
 
             Cadet cadet = cadetRepository.findById(cadetRaw.getCadetId())
-                    .orElseThrow(() -> {
-                        log.warn("Курсант с ID {} не найден", cadetRaw.getCadetId());
-                        return new RuntimeException("Курсант с ID " + cadetRaw.getCadetId() + " не найден");
-                    });
+                    .orElseThrow(() -> new RuntimeException("Курсант с ID " + cadetRaw.getCadetId() + " не найден"));
 
             log.debug("Обработка курсанта {} ({}), статус: {}",
                     cadet.getUserId(), cadet.getUser().getLastName(), cadetRaw.getStatus());
 
-            // Проверка статуса
             if (cadetRaw.getStatus() != null && !validStatuses.contains(cadetRaw.getStatus())) {
                 log.warn("Некорректный статус для курсанта {}: {}", cadet.getUserId(), cadetRaw.getStatus());
                 throw new IllegalArgumentException("Некорректный статус: " + cadetRaw.getStatus() +
@@ -617,11 +586,13 @@ public class ControlService {
             if (cadetRaw.getRawResults() == null || cadetRaw.getRawResults().isEmpty()) {
                 log.debug("Курсант {} без результатов, создаем записи со статусом", cadet.getUserId());
                 for (Short number : expectedNumbers) {
-                    Standard standard = standardRepository.findFirstByNumber(number)
-                            .orElseThrow(() -> {
-                                log.warn("Норматив с номером {} не найден", number);
-                                return new RuntimeException("Норматив с номером " + number + " не найден");
-                            });
+                    List<Standard> standards = standardRepository.findByNumber(number);
+                    if (standards.isEmpty()) {
+                        log.warn("Норматив с номером {} не найден", number);
+                        throw new RuntimeException("Норматив с номером " + number + " не найден");
+                    }
+                    // Используем первый попавшийся норматив (для сохранения в result)
+                    Standard standard = standards.get(0);
 
                     ControlResult statusResult = new ControlResult();
                     statusResult.setControl(control);
@@ -642,19 +613,12 @@ public class ControlService {
 
             for (StandardRawResultDto raw : cadetRaw.getRawResults()) {
 
-                // Проверка номера норматива
                 if (raw.getStandardNumber() == null || raw.getStandardNumber() <= 0 || raw.getStandardNumber() > 10000) {
                     log.warn("Некорректный номер норматива: {}", raw.getStandardNumber());
                     throw new IllegalArgumentException("Номер норматива должен быть от 1 до 10000");
                 }
 
-                Standard standard = standardRepository.findFirstByNumber(raw.getStandardNumber())
-                        .orElseThrow(() -> {
-                            log.warn("Норматив с номером {} не найден", raw.getStandardNumber());
-                            return new RuntimeException(
-                                    "Норматив с номером " + raw.getStandardNumber() + " не найден");
-                        });
-
+                // Проверяем, что норматив входит в список
                 if (!expectedNumbers.contains(raw.getStandardNumber())) {
                     log.warn("Норматив {} не входит в список нормативов контроля {}",
                             raw.getStandardNumber(), control.getId());
@@ -664,14 +628,12 @@ public class ControlService {
                     );
                 }
 
-                // Проверка на дубликаты
                 if (!submittedNumbers.add(raw.getStandardNumber())) {
                     log.warn("Дубликат норматива {} для курсанта {}", raw.getStandardNumber(), cadet.getUserId());
                     throw new RuntimeException("Обнаружен дубликат норматива с номером " + raw.getStandardNumber() +
                             " для курсанта " + cadet.getUserId());
                 }
 
-                // Проверка значений (одно из двух должно быть)
                 if (raw.getTimeValue() == null && raw.getIntValue() == null) {
                     log.warn("Для норматива {} не указаны значения", raw.getStandardNumber());
                     throw new IllegalArgumentException(
@@ -679,20 +641,36 @@ public class ControlService {
                     );
                 }
 
-                Short mark = evaluationService.evaluateMark(
-                        standard,
+                // Получаем ВСЕ нормативы для сравнения
+                List<Standard> standards = standardRepository.findByNumberAndCourseOrderByGrade(
+                        raw.getStandardNumber(), cadet.getCourse().shortValue());
+
+                if (standards.isEmpty()) {
+                    log.warn("Не найдены нормативы для номера {} и курса {}", raw.getStandardNumber(), cadet.getCourse());
+                    throw new RuntimeException(
+                            "Нормативы для номера " + raw.getStandardNumber() + " и курса " + cadet.getCourse() + " не найдены"
+                    );
+                }
+
+                // Находим подходящий норматив и получаем оценку
+                Short mark = evaluationService.evaluateMarkWithStandards(
+                        raw.getStandardNumber(),
+                        cadet.getCourse().intValue(),
                         raw.getTimeValue(),
                         raw.getIntValue(),
-                        cadet.getCourse().intValue()
+                        standards
                 );
 
                 log.debug("Норматив {} оценен в {} баллов", raw.getStandardNumber(), mark);
+
+                // Используем первый норматив для сохранения (как представление)
+                Standard standardForSave = standards.get(0);
 
                 ControlResult result = new ControlResult();
                 result.setControl(control);
                 result.setCadet(cadet);
                 result.setStatus(cadetRaw.getStatus() != null ? cadetRaw.getStatus() : "Присутствует");
-                result.setStandard(standard);
+                result.setStandard(standardForSave);
                 result.setMark(mark);
 
                 ControlResult saved = controlResultRepository.save(result);
@@ -700,7 +678,6 @@ public class ControlService {
                 allResults.add(saved);
             }
 
-            // Проверка количества нормативов
             if (submittedNumbers.size() != expectedNumbers.size()) {
                 log.warn("Для курсанта {} прислано {} нормативов, ожидалось {}",
                         cadet.getUserId(), submittedNumbers.size(), expectedNumbers.size());
@@ -727,22 +704,33 @@ public class ControlService {
             Cadet cadet = cadetRepository.findById(cadetId)
                     .orElseThrow(() -> new RuntimeException("Курсант не найден"));
 
-            ControlSummary summary = new ControlSummary();
-            summary.setId(new ControlSummaryId(control.getId(), cadetId));
-            summary.setControl(control);
-            summary.setCadet(cadet);
-            summary.setCadetMilitaryRank(cadet.getMilitaryRank());
-            summary.setCadetPost(cadet.getPost());
-            summary.setFinalMark(finalMark);
+            Optional<ControlSummary> existingSummary = controlSummaryRepository
+                    .findByControlIdAndCadetId(control.getId(), cadetId);
 
-            controlSummaryRepository.save(summary);
-            log.debug("Сохранена итоговая оценка {} для курсанта {}", finalMark, cadetId);
+            if (existingSummary.isPresent()) {
+                ControlSummary summary = existingSummary.get();
+                summary.setFinalMark(finalMark);
+                controlSummaryRepository.save(summary);
+                log.debug("Обновлена итоговая оценка {} для курсанта {}", finalMark, cadetId);
+            } else {
+                ControlSummary summary = new ControlSummary();
+                summary.setId(new ControlSummaryId(control.getId(), cadetId));
+                summary.setControl(control);
+                summary.setCadet(cadet);
+                summary.setCadetMilitaryRank(cadet.getMilitaryRank());
+                summary.setCadetPost(cadet.getPost());
+                summary.setFinalMark(finalMark);
+                controlSummaryRepository.save(summary);
+                log.debug("Создана итоговая оценка {} для курсанта {}", finalMark, cadetId);
+            }
         }
 
         log.info("Результаты контроля {} успешно сохранены", control.getId());
     }
 
-
+    /**
+     * Создание контроля с номерами нормативов
+     */
     @Transactional
     public ControlDto createControl(UserDetails userDetails, CreateControlRequest request) {
 
@@ -751,7 +739,6 @@ public class ControlService {
                 request != null ? request.getGroupId() : null,
                 request != null ? request.getType() : null);
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка создания контроля с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -763,29 +750,21 @@ public class ControlService {
         }
 
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
-                .orElseThrow(() -> {
-                    log.warn("Преподаватель не найден: {}", userDetails.getUsername());
-                    return new RuntimeException("Преподаватель не найден");
-                });
+                .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
 
-        // Проверка ID группы
         if (request.getGroupId() == null || request.getGroupId() <= 0) {
             log.warn("Некорректный ID группы: {}", request.getGroupId());
             throw new IllegalArgumentException("ID группы должен быть положительным числом");
         }
 
         Group group = groupRepository.findById(request.getGroupId())
-                .orElseThrow(() -> {
-                    log.warn("Группа не найдена: {}", request.getGroupId());
-                    return new RuntimeException("Группа не найдена");
-                });
+                .orElseThrow(() -> new RuntimeException("Группа не найдена"));
 
         if (!group.getUniversity().getId().equals(teacher.getUniversity().getId())) {
             log.warn("Нет доступа к группе {} для преподавателя {}", request.getGroupId(), teacher.getUserId());
             throw new RuntimeException("Нет доступа к этой группе");
         }
 
-        // Проверка типа контроля
         List<String> validTypes = Arrays.asList(
                 "Контрольное занятие", "Зачет", "Экзамен", "Смотр-конкурс"
         );
@@ -794,13 +773,11 @@ public class ControlService {
             throw new IllegalArgumentException("Некорректный тип контроля. Допустимые: " + validTypes);
         }
 
-        // Проверка даты
         if (request.getDate() == null) {
             log.warn("Не указана дата контроля");
             throw new IllegalArgumentException("Дата контроля не может быть пустой");
         }
 
-        // Проверка номеров нормативов
         if (request.getStandardNumbers() == null || request.getStandardNumbers().isEmpty()) {
             log.warn("Не указаны нормативы для контроля");
             throw new IllegalArgumentException("Необходимо указать хотя бы один номер норматива");
@@ -813,24 +790,10 @@ public class ControlService {
                 log.warn("Некорректный номер норматива: {}", number);
                 throw new IllegalArgumentException("Номер норматива должен быть от 1 до 10000");
             }
-            if (!standardRepository.findFirstByNumber(number).isPresent()) {
+            List<Standard> standards = standardRepository.findByNumber(number);
+            if (standards.isEmpty()) {
                 log.warn("Норматив с номером {} не найден", number);
                 throw new RuntimeException("Норматив с номером " + number + " не найден");
-            }
-        }
-
-        // Проверка инспекторов
-        if (request.getInspectorIds() != null) {
-            log.debug("Инспекторы: {}", request.getInspectorIds());
-            for (Long inspectorId : request.getInspectorIds()) {
-                if (inspectorId == null || inspectorId <= 0) {
-                    log.warn("Некорректный ID инспектора: {}", inspectorId);
-                    throw new IllegalArgumentException("ID инспектора должен быть положительным числом");
-                }
-                if (!teacherRepository.existsById(inspectorId)) {
-                    log.warn("Инспектор с ID {} не найден", inspectorId);
-                    throw new RuntimeException("Инспектор с ID " + inspectorId + " не найден");
-                }
             }
         }
 
@@ -871,7 +834,9 @@ public class ControlService {
         return convertToDto(savedControl);
     }
 
-
+    /**
+     * Редактирование результатов контроля
+     */
     @Transactional
     public void updateControlResults(UserDetails userDetails, UpdateControlResultsRequest request) {
 
@@ -879,7 +844,6 @@ public class ControlService {
                 request != null ? request.getControlId() : null,
                 userDetails != null ? userDetails.getUsername() : null);
 
-        // Проверка входных данных
         if (userDetails == null || userDetails.getUsername() == null) {
             log.warn("Попытка обновления результатов с null userDetails");
             throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
@@ -901,16 +865,10 @@ public class ControlService {
         }
 
         Teacher teacher = teacherRepository.findByUserLogin(userDetails.getUsername())
-                .orElseThrow(() -> {
-                    log.warn("Преподаватель не найден: {}", userDetails.getUsername());
-                    return new RuntimeException("Преподаватель не найден");
-                });
+                .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
 
         Control control = controlRepository.findById(request.getControlId())
-                .orElseThrow(() -> {
-                    log.warn("Контроль не найден: {}", request.getControlId());
-                    return new RuntimeException("Контроль не найден");
-                });
+                .orElseThrow(() -> new RuntimeException("Контроль не найден"));
 
         if (!control.getGroup().getUniversity().getId().equals(teacher.getUniversity().getId())) {
             log.warn("Нет доступа к контролю {} для преподавателя {}", request.getControlId(), teacher.getUserId());
@@ -924,7 +882,6 @@ public class ControlService {
         for (UpdateControlResultRequest update : request.getUpdates()) {
             updatedCount++;
 
-            // Проверка входных данных обновления
             if (update.getCadetId() == null || update.getCadetId() <= 0) {
                 log.warn("Некорректный ID курсанта в обновлении #{}", updatedCount);
                 throw new IllegalArgumentException("ID курсанта должен быть положительным числом");
@@ -937,18 +894,21 @@ public class ControlService {
 
             log.debug("Обновление #{}: курсант {}, норматив {}", updatedCount, update.getCadetId(), update.getStandardNumber());
 
-            Standard standard = standardRepository.findFirstByNumber(update.getStandardNumber())
-                    .orElseThrow(() -> {
-                        log.warn("Норматив с номером {} не найден", update.getStandardNumber());
-                        return new RuntimeException(
-                                "Норматив с номером " + update.getStandardNumber() + " не найден");
-                    });
+            Cadet cadet = cadetRepository.findById(update.getCadetId())
+                    .orElseThrow(() -> new RuntimeException("Курсант с ID " + update.getCadetId() + " не найден"));
 
+            List<Standard> standards = standardRepository.findByNumber(update.getStandardNumber());
+            if (standards.isEmpty()) {
+                log.warn("Норматив с номером {} не найден", update.getStandardNumber());
+                throw new RuntimeException("Норматив с номером " + update.getStandardNumber() + " не найден");
+            }
+
+            // Находим существующий результат
             ControlResult result = controlResultRepository
                     .findByControlIdAndCadet_UserIdAndStandardId(
                             request.getControlId(),
                             update.getCadetId(),
-                            standard.getId()
+                            standards.get(0).getId()
                     ).orElseThrow(() -> {
                         log.warn("Результат для курсанта {} и норматива {} не найден",
                                 update.getCadetId(), update.getStandardNumber());
@@ -958,9 +918,7 @@ public class ControlService {
                         );
                     });
 
-            Cadet cadet = result.getCadet();
-
-            // Проверка статуса
+            // Обновляем статус
             if (update.getStatus() != null) {
                 List<String> validStatuses = Arrays.asList(
                         "Присутствует", "Болен", "Командировка", "Гауптвахта"
@@ -973,23 +931,14 @@ public class ControlService {
                 log.debug("Статус обновлен на {}", update.getStatus());
             }
 
+            // Обновляем оценку
             if (update.getTimeValue() != null || update.getIntValue() != null) {
-                // Проверка что одно из значений передано
-                if (update.getTimeValue() == null && update.getIntValue() == null) {
-                    log.warn("Не указаны значения для норматива {}", update.getStandardNumber());
-                    throw new IllegalArgumentException(
-                            "Должно быть указано либо время, либо количество"
-                    );
-                }
-
-                BigDecimal timeValue = update.getTimeValue() != null ? update.getTimeValue() : null;
-                Integer intValue = update.getIntValue() != null ? update.getIntValue() : null;
-
-                Short newMark = evaluationService.evaluateMark(
-                        standard,
-                        timeValue,
-                        intValue,
-                        cadet.getCourse().intValue()
+                Short newMark = evaluationService.evaluateMarkWithStandards(
+                        update.getStandardNumber(),
+                        cadet.getCourse().intValue(),
+                        update.getTimeValue(),
+                        update.getIntValue(),
+                        standards
                 );
 
                 result.setMark(newMark);
@@ -1002,7 +951,6 @@ public class ControlService {
             List<ControlResult> cadetResults = controlResultRepository
                     .findByControlIdAndCadet_UserId(control.getId(), cadet.getUserId());
 
-            // Только те, у которых есть оценка (присутствуют)
             List<ControlResult> presentResults = cadetResults.stream()
                     .filter(r -> r.getMark() != null)
                     .collect(Collectors.toList());
@@ -1013,7 +961,7 @@ public class ControlService {
             }
         }
 
-        // Пересчитываем итоговые оценки ТОЛЬКО для присутствующих
+        // Пересчитываем итоговые оценки
         if (!updatedResultsByCadet.isEmpty()) {
             log.info("Пересчет итоговых оценок для {} курсантов", updatedResultsByCadet.size());
 
@@ -1024,18 +972,15 @@ public class ControlService {
                 Long cadetId = entry.getKey();
                 Short finalMark = entry.getValue();
 
-                // Пытаемся найти существующую итоговую оценку
                 Optional<ControlSummary> existingSummary = controlSummaryRepository
                         .findByControlIdAndCadetId(control.getId(), cadetId);
 
                 if (existingSummary.isPresent()) {
-                    // Обновляем существующую
                     ControlSummary summary = existingSummary.get();
                     summary.setFinalMark(finalMark);
                     controlSummaryRepository.save(summary);
                     log.debug("Обновлена итоговая оценка {} для курсанта {}", finalMark, cadetId);
                 } else {
-                    // Создаем новую, если ее нет
                     Cadet cadet = cadetRepository.findById(cadetId)
                             .orElseThrow(() -> new RuntimeException("Курсант не найден"));
 
@@ -1046,7 +991,6 @@ public class ControlService {
                     summary.setCadetMilitaryRank(cadet.getMilitaryRank());
                     summary.setCadetPost(cadet.getPost());
                     summary.setFinalMark(finalMark);
-
                     controlSummaryRepository.save(summary);
                     log.debug("Создана итоговая оценка {} для курсанта {}", finalMark, cadetId);
                 }

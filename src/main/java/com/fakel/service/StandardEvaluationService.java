@@ -6,7 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.List;
 
@@ -19,7 +21,6 @@ public class StandardEvaluationService {
     private StandardRepository standardRepository;
 
     public Short evaluateMark(Standard standard, BigDecimal timeValue, Integer intValue, Integer course) {
-
         log.info("Оценка норматива: standardId={}, course={}, timeValue={}, intValue={}",
                 standard != null ? standard.getId() : null, course, timeValue, intValue);
         log.debug("Детали норматива: number={}, name={}, unit={}",
@@ -27,40 +28,26 @@ public class StandardEvaluationService {
                 standard != null ? standard.getName() : null,
                 standard != null && standard.getMeasurementUnit() != null ? standard.getMeasurementUnit().getCode() : null);
 
-        // Проверка входных данных
         if (standard == null) {
             log.warn("Попытка оценки с null нормативом");
             throw new IllegalArgumentException("Норматив не может быть null");
         }
 
-        if (course == null) {
-            log.warn("Курс null при оценке норматива {}", standard.getId());
-            throw new IllegalArgumentException("Курс не может быть null");
+        if (course == null || course < 1 || course > 5) {
+            log.warn("Некорректный курс: {}", course);
+            throw new IllegalArgumentException("Курс должен быть от 1 до 5");
         }
 
-        if (course < 1 || course > 5) {
-            log.warn("Некорректный курс {} при оценке норматива {}", course, standard.getId());
-            throw new IllegalArgumentException("Курс должен быть от 1 до 5, получено: " + course);
-        }
-
-        if (standard.getMeasurementUnit() == null) {
+        if (standard.getMeasurementUnit() == null || standard.getMeasurementUnit().getCode() == null) {
             log.warn("У норматива {} не указана единица измерения", standard.getId());
             throw new IllegalArgumentException("У норматива не указана единица измерения");
         }
 
         String unitCode = standard.getMeasurementUnit().getCode();
-        if (unitCode == null) {
-            log.warn("Код единицы измерения null для норматива {}", standard.getId());
-            throw new IllegalArgumentException("Код единицы измерения не может быть null");
-        }
-
         log.debug("Тип норматива: {}", unitCode);
 
-        // Получаем нормативы для сравнения
         List<Standard> standards;
         try {
-            log.debug("Поиск нормативов для сравнения: number={}, course={}",
-                    standard.getNumber(), course);
             standards = standardRepository.findByNumberAndCourseOrderByGrade(
                     standard.getNumber(), course.shortValue());
             log.debug("Найдено {} нормативов для сравнения", standards != null ? standards.size() : 0);
@@ -70,18 +57,59 @@ public class StandardEvaluationService {
         }
 
         if (standards == null || standards.isEmpty()) {
-            log.warn("Не найдены нормативы для сравнения: number={}, course={}",
-                    standard.getNumber(), course);
-            throw new RuntimeException("Не найдены нормативы для сравнения");
+            log.warn("Не найдены нормативы для сравнения: number={}, course={}", standard.getNumber(), course);
+            return 2;
         }
 
-        // Оценка в зависимости от типа
         Short result;
         if (unitCode.equals("интервал")) {
-            log.debug("Оценка временного норматива");
             result = evaluateTime(timeValue, standards);
         } else {
-            log.debug("Оценка количественного норматива");
+            result = evaluateQuantity(intValue, standards);
+        }
+
+        log.info("Результат оценки: {}", result);
+        return result;
+    }
+
+    public Short evaluateMarkWithStandards(Short standardNumber, Integer course,
+                                           BigDecimal timeValue, Integer intValue,
+                                           List<Standard> standards) {
+        log.info("Оценка норматива: number={}, course={}, timeValue={}, intValue={}",
+                standardNumber, course, timeValue, intValue);
+
+        if (standardNumber == null) {
+            log.warn("Номер норматива null");
+            throw new IllegalArgumentException("Номер норматива не может быть null");
+        }
+
+        if (course == null || course < 1 || course > 5) {
+            log.warn("Некорректный курс: {}", course);
+            throw new IllegalArgumentException("Курс должен быть от 1 до 5");
+        }
+
+        if (standards == null || standards.isEmpty()) {
+            log.warn("Список нормативов пуст для номера {} и курса {}", standardNumber, course);
+            return 2;
+        }
+
+        String unitCode = null;
+        for (Standard s : standards) {
+            if (s != null && s.getMeasurementUnit() != null) {
+                unitCode = s.getMeasurementUnit().getCode();
+                break;
+            }
+        }
+
+        if (unitCode == null) {
+            log.warn("Не удалось определить тип норматива");
+            return 2;
+        }
+
+        Short result;
+        if (unitCode.equals("интервал")) {
+            result = evaluateTime(timeValue, standards);
+        } else {
             result = evaluateQuantity(intValue, standards);
         }
 
@@ -90,9 +118,8 @@ public class StandardEvaluationService {
     }
 
     private Short evaluateTime(BigDecimal result, List<Standard> standards) {
-        log.debug("Оценка временного норматива с результатом: {}", result);
+        log.debug("Оценка временного норматива с результатом: {} сек", result);
 
-        // Проверка результата
         if (result == null) {
             log.debug("Результат null, оценка 2");
             return 2;
@@ -103,63 +130,37 @@ public class StandardEvaluationService {
             return 2;
         }
 
-        // Проверка списка нормативов
         if (standards == null || standards.isEmpty()) {
             log.debug("Список нормативов пуст, оценка 2");
             return 2;
         }
 
-        // Проверяем на "Отлично"
-        for (Standard s : standards) {
-            if (s == null) continue;
+        // Сортируем по возрастанию времени (чем меньше время, тем лучше)
+        List<Standard> sortedStandards = standards.stream()
+                .filter(s -> s != null && s.getTimeValue() != null)
+                .sorted((s1, s2) -> {
+                    BigDecimal t1 = convertDurationToBigDecimal(s1.getTimeValue());
+                    BigDecimal t2 = convertDurationToBigDecimal(s2.getTimeValue());
+                    return t1.compareTo(t2);  // от меньшего к большему
+                })
+                .toList();
 
-            if ("Отлично".equals(s.getGrade())) {
-                Duration timeValue = s.getTimeValue();
-                if (timeValue != null) {
-                    BigDecimal standardValue = convertDurationToBigDecimal(timeValue);
-                    log.trace("Сравнение с нормативом Отлично: стандарт={}, результат={}",
-                            standardValue, result);
-                    if (result.compareTo(standardValue) <= 0) {
-                        log.debug("Результат соответствует оценке 5 (Отлично)");
-                        return 5;
-                    }
-                }
-            }
+        log.debug("Отсортированные нормативы по времени:");
+        for (Standard s : sortedStandards) {
+            BigDecimal time = convertDurationToBigDecimal(s.getTimeValue());
+            log.debug("  {}: {} сек", s.getGrade(), time);
         }
 
-        // Проверяем на "Хорошо"
-        for (Standard s : standards) {
-            if (s == null) continue;
+        for (Standard standard : sortedStandards) {
+            BigDecimal standardValue = convertDurationToBigDecimal(standard.getTimeValue());
+            log.trace("Сравнение с {}: стандарт={} сек, результат={} сек",
+                    standard.getGrade(), standardValue, result);
 
-            if ("Хорошо".equals(s.getGrade())) {
-                Duration timeValue = s.getTimeValue();
-                if (timeValue != null) {
-                    BigDecimal standardValue = convertDurationToBigDecimal(timeValue);
-                    log.trace("Сравнение с нормативом Хорошо: стандарт={}, результат={}",
-                            standardValue, result);
-                    if (result.compareTo(standardValue) <= 0) {
-                        log.debug("Результат соответствует оценке 4 (Хорошо)");
-                        return 4;
-                    }
-                }
-            }
-        }
-
-        // Проверяем на "Удовлетворительно"
-        for (Standard s : standards) {
-            if (s == null) continue;
-
-            if ("Удовлетворительно".equals(s.getGrade())) {
-                Duration timeValue = s.getTimeValue();
-                if (timeValue != null) {
-                    BigDecimal standardValue = convertDurationToBigDecimal(timeValue);
-                    log.trace("Сравнение с нормативом Удовлетворительно: стандарт={}, результат={}",
-                            standardValue, result);
-                    if (result.compareTo(standardValue) <= 0) {
-                        log.debug("Результат соответствует оценке 3 (Удовлетворительно)");
-                        return 3;
-                    }
-                }
+            // Для временных нормативов: результат должен быть МЕНЬШЕ или равен стандарту
+            if (result.compareTo(standardValue) <= 0) {
+                Short mark = convertGradeToMark(standard.getGrade());
+                log.debug("Результат соответствует оценке {} ({})", mark, standard.getGrade());
+                return mark;
             }
         }
 
@@ -170,7 +171,6 @@ public class StandardEvaluationService {
     private Short evaluateQuantity(Integer result, List<Standard> standards) {
         log.debug("Оценка количественного норматива с результатом: {}", result);
 
-        // Проверка результата
         if (result == null) {
             log.debug("Результат null, оценка 2");
             return 2;
@@ -181,60 +181,33 @@ public class StandardEvaluationService {
             return 2;
         }
 
-        // Проверка списка нормативов
         if (standards == null || standards.isEmpty()) {
             log.debug("Список нормативов пуст, оценка 2");
             return 2;
         }
 
-        // Проверяем на "Отлично"
-        for (Standard s : standards) {
-            if (s == null) continue;
+        // Сортируем по убыванию количества (чем больше, тем лучше)
+        List<Standard> sortedStandards = standards.stream()
+                .filter(s -> s != null && s.getIntValue() != null)
+                .sorted((s1, s2) -> {
+                    return s2.getIntValue().compareTo(s1.getIntValue());  // от большего к меньшему
+                })
+                .toList();
 
-            if ("Отлично".equals(s.getGrade())) {
-                BigDecimal intValue = s.getIntValue();
-                if (intValue != null) {
-                    log.trace("Сравнение с нормативом Отлично: стандарт={}, результат={}",
-                            intValue.intValue(), result);
-                    if (result >= intValue.intValue()) {
-                        log.debug("Результат соответствует оценке 5 (Отлично)");
-                        return 5;
-                    }
-                }
-            }
+        log.debug("Отсортированные нормативы по количеству:");
+        for (Standard s : sortedStandards) {
+            log.debug("  {}: {} раз", s.getGrade(), s.getIntValue());
         }
 
-        // Проверяем на "Хорошо"
-        for (Standard s : standards) {
-            if (s == null) continue;
+        for (Standard standard : sortedStandards) {
+            int standardValue = standard.getIntValue().intValue();
+            log.trace("Сравнение с {}: стандарт={}, результат={}",
+                    standard.getGrade(), standardValue, result);
 
-            if ("Хорошо".equals(s.getGrade())) {
-                BigDecimal intValue = s.getIntValue();
-                if (intValue != null) {
-                    log.trace("Сравнение с нормативом Хорошо: стандарт={}, результат={}",
-                            intValue.intValue(), result);
-                    if (result >= intValue.intValue()) {
-                        log.debug("Результат соответствует оценке 4 (Хорошо)");
-                        return 4;
-                    }
-                }
-            }
-        }
-
-        // Проверяем на "Удовлетворительно"
-        for (Standard s : standards) {
-            if (s == null) continue;
-
-            if ("Удовлетворительно".equals(s.getGrade())) {
-                BigDecimal intValue = s.getIntValue();
-                if (intValue != null) {
-                    log.trace("Сравнение с нормативом Удовлетворительно: стандарт={}, результат={}",
-                            intValue.intValue(), result);
-                    if (result >= intValue.intValue()) {
-                        log.debug("Результат соответствует оценке 3 (Удовлетворительно)");
-                        return 3;
-                    }
-                }
+            if (result >= standardValue) {
+                Short mark = convertGradeToMark(standard.getGrade());
+                log.debug("Результат соответствует оценке {} ({})", mark, standard.getGrade());
+                return mark;
             }
         }
 
@@ -242,28 +215,48 @@ public class StandardEvaluationService {
         return 2;
     }
 
+    /**
+     * Конвертирует Duration в BigDecimal (секунды)
+     * Пример: "14.1 seconds" -> 14.1
+     *         "2 minutes 15 seconds" -> 135.0
+     */
     private BigDecimal convertDurationToBigDecimal(Duration duration) {
         if (duration == null) {
-            log.trace("Конвертация null Duration в BigDecimal.ZERO");
+            log.trace("Конвертация null Duration -> 0");
             return BigDecimal.ZERO;
         }
 
         try {
             long totalSeconds = duration.getSeconds();
-            long minutes = totalSeconds / 60;
-            long seconds = totalSeconds % 60;
+            int nano = duration.getNano();
 
-            BigDecimal minutesDecimal = BigDecimal.valueOf(minutes);
-            BigDecimal secondsDecimal = BigDecimal.valueOf(seconds)
-                    .divide(BigDecimal.valueOf(60), 2, java.math.RoundingMode.HALF_UP);
+            // Если есть наносекунды, добавляем их как десятичную часть
+            if (nano > 0) {
+                BigDecimal seconds = BigDecimal.valueOf(totalSeconds);
+                BigDecimal nanoPart = BigDecimal.valueOf(nano)
+                        .divide(BigDecimal.valueOf(1_000_000_000), 3, RoundingMode.HALF_UP);
+                return seconds.add(nanoPart);
+            }
 
-            BigDecimal result = minutesDecimal.add(secondsDecimal);
-            log.trace("Конвертация Duration {} в BigDecimal: {} мин {} сек = {}",
-                    duration, minutes, seconds, result);
-            return result;
+            log.trace("Конвертация Duration {} -> {} секунд", duration, totalSeconds);
+            return BigDecimal.valueOf(totalSeconds);
         } catch (Exception e) {
             log.warn("Ошибка при конвертации Duration: {}, возвращаем 0", e.getMessage());
             return BigDecimal.ZERO;
+        }
+    }
+
+    private Short convertGradeToMark(String grade) {
+        if (grade == null) return 2;
+        switch (grade) {
+            case "Отлично":
+                return 5;
+            case "Хорошо":
+                return 4;
+            case "Удовлетворительно":
+                return 3;
+            default:
+                return 2;
         }
     }
 }
