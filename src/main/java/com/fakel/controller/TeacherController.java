@@ -1,5 +1,6 @@
 package com.fakel.controller;
 
+import com.fakel.dto.TeacherDto;
 import com.fakel.dto.UpdateTeacherProfileRequest;
 import com.fakel.service.TeacherService;
 import jakarta.validation.Valid;
@@ -25,4 +26,12 @@ public class TeacherController {
 
         teacherService.updateProfile(userDetails, request);
     }
+    @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public TeacherDto getTeacherById(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long id) {
+        return teacherService.getTeacherById(userDetails, id);
+    }
+
 }

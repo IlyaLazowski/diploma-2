@@ -1,5 +1,6 @@
 package com.fakel.service;
 
+import com.fakel.dto.TeacherDto;
 import com.fakel.dto.UpdateTeacherProfileRequest;
 import com.fakel.model.Teacher;
 import com.fakel.model.User;
@@ -205,4 +206,50 @@ public class TeacherService {
         log.trace("Проверка текста '{}': {}", text, isValid);
         return isValid;
     }
+
+    @Transactional(readOnly = true)
+    public TeacherDto getTeacherById(UserDetails userDetails, Long teacherId) {
+        log.info("Получение преподавателя по ID: {}, пользователь: {}", teacherId,
+                userDetails != null ? userDetails.getUsername() : null);
+
+        if (userDetails == null || userDetails.getUsername() == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть пустыми");
+        }
+
+        if (teacherId == null || teacherId <= 0) {
+            throw new IllegalArgumentException("ID преподавателя должен быть положительным числом");
+        }
+
+        // Получаем текущего пользователя
+        User currentUser = userRepository.findByLogin(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+
+        // Получаем запрашиваемого преподавателя
+        Teacher teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new RuntimeException("Преподаватель не найден"));
+
+        // Проверяем, что оба пользователя из одного университета
+        if (!currentUser.getUniversity().getId().equals(teacher.getUniversity().getId())) {
+            throw new RuntimeException("Нет доступа к данным преподавателя из другого университета");
+        }
+
+        return convertToDto(teacher);
+    }
+
+    private TeacherDto convertToDto(Teacher teacher) {
+        TeacherDto dto = new TeacherDto();
+        dto.setId(teacher.getUserId());
+        dto.setFullName(teacher.getUser().getLastName() + " " +
+                teacher.getUser().getFirstName() +
+                (teacher.getUser().getPatronymic() != null ? " " + teacher.getUser().getPatronymic() : ""));
+        dto.setLogin(teacher.getUser().getLogin());
+        dto.setMail(teacher.getUser().getMail());
+        dto.setPhoneNumber(teacher.getUser().getPhoneNumber());
+        dto.setQualification(teacher.getQualification());
+        dto.setMilitaryRank(teacher.getMilitaryRank());
+        dto.setPost(teacher.getPost());
+        return dto;
+    }
+
+
 }

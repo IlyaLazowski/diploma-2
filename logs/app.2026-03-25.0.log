@@ -1,0 +1,771 @@
+2026-03-25T10:26:28.397+03:00  INFO 3796 --- [main] com.fakel.FakelApplication               : Starting FakelApplication using Java 24.0.2 with PID 3796 (C:\Users\ilya\Desktop\diploma-main\target\classes started by ilya in C:\Users\ilya\Desktop\diploma-main)
+2026-03-25T10:26:28.407+03:00 DEBUG 3796 --- [main] com.fakel.FakelApplication               : Running with Spring Boot v3.4.4, Spring v6.2.5
+2026-03-25T10:26:28.408+03:00  INFO 3796 --- [main] com.fakel.FakelApplication               : No active profile set, falling back to 1 default profile: "default"
+2026-03-25T10:26:29.911+03:00  INFO 3796 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-25T10:26:30.086+03:00  INFO 3796 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 152 ms. Found 20 JPA repository interfaces.
+2026-03-25T10:26:31.555+03:00  INFO 3796 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-25T10:26:31.585+03:00  INFO 3796 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-25T10:26:31.585+03:00  INFO 3796 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2026-03-25T10:26:31.704+03:00  INFO 3796 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-25T10:26:31.704+03:00  INFO 3796 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3187 ms
+2026-03-25T10:26:32.130+03:00  INFO 3796 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-25T10:26:32.267+03:00  INFO 3796 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2026-03-25T10:26:32.384+03:00  INFO 3796 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-03-25T10:26:32.987+03:00  INFO 3796 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-25T10:26:33.049+03:00  INFO 3796 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-25T10:26:33.407+03:00  INFO 3796 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@657b3b
+2026-03-25T10:26:33.410+03:00  INFO 3796 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-25T10:26:33.493+03:00  WARN 3796 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-25T10:26:33.523+03:00  INFO 3796 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-25T10:26:35.414+03:00  INFO 3796 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-25T10:26:35.574+03:00  INFO 3796 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-25T10:26:35.994+03:00  INFO 3796 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-25T10:26:36.912+03:00 DEBUG 3796 --- [main] c.f.security.JwtAuthenticationFilter     : Filter 'jwtAuthenticationFilter' configured for use
+2026-03-25T10:26:37.255+03:00  INFO 3796 --- [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-25T10:26:37.256+03:00  WARN 3796 --- [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-25T10:26:38.226+03:00  INFO 3796 --- [main] c.fakel.service.PasswordEncoderService   : Запуск процедуры кодирования паролей всех пользователей
+2026-03-25T10:26:38.548+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь ivan.i1503: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.549+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь petr.p2207: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.549+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь sido.a0511: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.549+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь smir.d1204: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.549+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь kuzn.m3009: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.549+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь popo.a1806: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.550+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь vasi.n2512: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.550+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь zait.a0702: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.550+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь pavl.v1908: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.550+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь novi.k0305: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.550+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь fedo.r1410: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.551+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь moro.g2801: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.551+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь volk.t0906: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.551+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь alek.d2111: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.551+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь lebe.k1604: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.551+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь seme.e0207: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.551+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь kozl.m1309: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.552+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь mikh.ya2505: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.552+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь tara.a0712: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.552+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь belo.d1903: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.553+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь koma.l3008: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.553+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь orlo.m1102: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.553+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь kise.a2310: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.553+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь soko.m0506: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.553+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь grig.v1701: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.553+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь fomi.n2907: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.553+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь davy.s0804: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.553+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь tito.g2009: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.553+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь voro.i0212: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.553+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь cher.a1406: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.553+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь soko.a: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.553+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь vasi.e: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.555+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь moro.d: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.555+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь kryl.a: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.555+03:00 DEBUG 3796 --- [main] c.fakel.service.PasswordEncoderService   : Пользователь grom.a: пароль уже зашифрован, пропускаем
+2026-03-25T10:26:38.555+03:00  INFO 3796 --- [main] c.fakel.service.PasswordEncoderService   : Кодирование паролей завершено. Всего обработано: 35, закодировано: 0, пропущено: 35, ошибок: 0
+2026-03-25T10:26:38.592+03:00  WARN 3796 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-25T10:26:39.448+03:00  INFO 3796 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-03-25T10:26:39.463+03:00  INFO 3796 --- [main] com.fakel.FakelApplication               : Started FakelApplication in 11.909 seconds (process running for 16.251)
+2026-03-25T10:26:59.362+03:00  INFO 3796 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-25T10:26:59.363+03:00  INFO 3796 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-03-25T10:26:59.366+03:00  INFO 3796 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2026-03-25T10:26:59.746+03:00  INFO 3796 --- [http-nio-8080-exec-1] com.fakel.service.MessageService         : Получение статистики отправленных сообщений для пользователя: soko.a
+2026-03-25T10:26:59.764+03:00 DEBUG 3796 --- [http-nio-8080-exec-1] com.fakel.service.MessageService         : Получение статистики для преподавателя 31
+2026-03-25T10:26:59.797+03:00 DEBUG 3796 --- [http-nio-8080-exec-1] com.fakel.service.MessageService         : Статистика: всего=2, прочитано=1, непрочитано=1
+2026-03-25T10:26:59.797+03:00  INFO 3796 --- [http-nio-8080-exec-1] com.fakel.service.MessageService         : Статистика успешно получена
+2026-03-25T10:28:02.342+03:00  INFO 3796 --- [http-nio-8080-exec-4] com.fakel.service.MessageService         : Получение сообщений курсанта: user=ivan.i1503, dateFrom=null, dateTo=null, unreadOnly=true, page=0, size=10
+2026-03-25T10:28:02.356+03:00 DEBUG 3796 --- [http-nio-8080-exec-4] com.fakel.service.MessageService         : Курсант ID: 1
+2026-03-25T10:28:02.357+03:00 DEBUG 3796 --- [http-nio-8080-exec-4] com.fakel.service.MessageService         : Режим: только непрочитанные
+2026-03-25T10:28:02.389+03:00  INFO 3796 --- [http-nio-8080-exec-4] com.fakel.service.MessageService         : Найдено 3 сообщений для курсанта 1
+2026-03-25T10:28:02.389+03:00 DEBUG 3796 --- [http-nio-8080-exec-4] com.fakel.service.MessageService         : Всего страниц: 1
+2026-03-25T10:28:02.398+03:00  WARN 3796 --- [http-nio-8080-exec-4] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+2026-03-25T10:28:35.693+03:00 ERROR 3796 --- [http-nio-8080-exec-5] c.f.exception.GlobalExceptionHandler     : Доступ запрещен: Access Denied
+2026-03-25T10:28:57.556+03:00  INFO 3796 --- [http-nio-8080-exec-6] com.fakel.service.MessageService         : Получение количества непрочитанных сообщений для пользователя: ivan.i1503
+2026-03-25T10:28:57.570+03:00 DEBUG 3796 --- [http-nio-8080-exec-6] com.fakel.service.MessageService         : Непрочитанных сообщений для курсанта 1: 3
+2026-03-25T10:30:10.327+03:00  INFO 3796 --- [http-nio-8080-exec-9] com.fakel.service.MessageService         : Получение сообщения по ID: 1, пользователь: ivan.i1503
+2026-03-25T10:30:10.344+03:00 DEBUG 3796 --- [http-nio-8080-exec-9] com.fakel.service.MessageService         : Сообщение найдено: отправитель=Соколов, тема=🏆 Поздравляю с победой!, прочитано=true
+2026-03-25T10:31:17.326+03:00  INFO 3796 --- [http-nio-8080-exec-2] com.fakel.service.MessageService         : Обновление статуса сообщений: user=ivan.i1503, count=3, isReading=true
+2026-03-25T10:31:17.333+03:00 DEBUG 3796 --- [http-nio-8080-exec-2] com.fakel.service.MessageService         : Обновление статуса для 3 сообщений курсанта 1
+2026-03-25T10:31:17.373+03:00  WARN 3796 --- [http-nio-8080-exec-2] com.fakel.service.MessageService         : Обновлено только 0 из 3 сообщений
+2026-03-25T10:31:17.379+03:00  INFO 3796 --- [http-nio-8080-exec-2] c.f.exception.GlobalExceptionHandler     : 404 Not Found: Некоторые сообщения не найдены или не принадлежат курсанту
+2026-03-25T10:31:26.336+03:00  INFO 3796 --- [http-nio-8080-exec-3] com.fakel.service.MessageService         : Обновление статуса сообщений: user=ivan.i1503, count=2, isReading=true
+2026-03-25T10:31:26.341+03:00 DEBUG 3796 --- [http-nio-8080-exec-3] com.fakel.service.MessageService         : Обновление статуса для 2 сообщений курсанта 1
+2026-03-25T10:31:26.347+03:00  INFO 3796 --- [http-nio-8080-exec-3] com.fakel.service.MessageService         : Статус успешно обновлен для 2 сообщений
+2026-03-25T10:32:13.338+03:00 ERROR 3796 --- [http-nio-8080-exec-4] c.f.exception.GlobalExceptionHandler     : Необработанная ошибка: Request method 'DELETE' is not supported
+
+org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'DELETE' is not supported
+	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.handleNoMatch(RequestMappingInfoHandlerMapping.java:267) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.lookupHandlerMethod(AbstractHandlerMethodMapping.java:441) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.getHandlerInternal(AbstractHandlerMethodMapping.java:382) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.getHandlerInternal(RequestMappingInfoHandlerMapping.java:127) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.getHandlerInternal(RequestMappingInfoHandlerMapping.java:68) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.AbstractHandlerMapping.getHandler(AbstractHandlerMapping.java:509) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.getHandler(DispatcherServlet.java:1284) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1065) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.FrameworkServlet.doDelete(FrameworkServlet.java:936) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:596) ~[tomcat-embed-core-10.1.39.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.39.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at com.fakel.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:57) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:243) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:238) ~[spring-security-config-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1743) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at java.base/java.lang.Thread.run(Thread.java:1447) ~[na:na]
+
+2026-03-25T10:32:19.355+03:00 ERROR 3796 --- [http-nio-8080-exec-6] c.f.exception.GlobalExceptionHandler     : Необработанная ошибка: Request method 'DELETE' is not supported
+
+org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'DELETE' is not supported
+	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.handleNoMatch(RequestMappingInfoHandlerMapping.java:267) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.lookupHandlerMethod(AbstractHandlerMethodMapping.java:441) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.getHandlerInternal(AbstractHandlerMethodMapping.java:382) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.getHandlerInternal(RequestMappingInfoHandlerMapping.java:127) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.getHandlerInternal(RequestMappingInfoHandlerMapping.java:68) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.AbstractHandlerMapping.getHandler(AbstractHandlerMapping.java:509) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.getHandler(DispatcherServlet.java:1284) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1065) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.FrameworkServlet.doDelete(FrameworkServlet.java:936) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:596) ~[tomcat-embed-core-10.1.39.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.39.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at com.fakel.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:57) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:243) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:238) ~[spring-security-config-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1743) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at java.base/java.lang.Thread.run(Thread.java:1447) ~[na:na]
+
+2026-03-25T10:32:29.354+03:00 ERROR 3796 --- [http-nio-8080-exec-8] c.f.exception.GlobalExceptionHandler     : Необработанная ошибка: Request method 'DELETE' is not supported
+
+org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'DELETE' is not supported
+	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.handleNoMatch(RequestMappingInfoHandlerMapping.java:267) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.lookupHandlerMethod(AbstractHandlerMethodMapping.java:441) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.getHandlerInternal(AbstractHandlerMethodMapping.java:382) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.getHandlerInternal(RequestMappingInfoHandlerMapping.java:127) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.getHandlerInternal(RequestMappingInfoHandlerMapping.java:68) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.AbstractHandlerMapping.getHandler(AbstractHandlerMapping.java:509) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.getHandler(DispatcherServlet.java:1284) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1065) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.FrameworkServlet.doDelete(FrameworkServlet.java:936) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:596) ~[tomcat-embed-core-10.1.39.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.39.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at com.fakel.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:57) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:243) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:238) ~[spring-security-config-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1743) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at java.base/java.lang.Thread.run(Thread.java:1447) ~[na:na]
+
+2026-03-25T10:32:39.835+03:00 ERROR 3796 --- [http-nio-8080-exec-10] c.f.exception.GlobalExceptionHandler     : Необработанная ошибка: Request method 'DELETE' is not supported
+
+org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'DELETE' is not supported
+	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.handleNoMatch(RequestMappingInfoHandlerMapping.java:267) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.lookupHandlerMethod(AbstractHandlerMethodMapping.java:441) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.getHandlerInternal(AbstractHandlerMethodMapping.java:382) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.getHandlerInternal(RequestMappingInfoHandlerMapping.java:127) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping.getHandlerInternal(RequestMappingInfoHandlerMapping.java:68) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.AbstractHandlerMapping.getHandler(AbstractHandlerMapping.java:509) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.getHandler(DispatcherServlet.java:1284) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1065) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.FrameworkServlet.doDelete(FrameworkServlet.java:936) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:596) ~[tomcat-embed-core-10.1.39.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.39.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at com.fakel.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:57) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:243) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:238) ~[spring-security-config-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1743) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at java.base/java.lang.Thread.run(Thread.java:1447) ~[na:na]
+
+2026-03-25T10:34:13.141+03:00  INFO 3796 --- [http-nio-8080-exec-2] com.fakel.service.MessageService         : Удаление сообщений: user=ivan.i1503, count=1
+2026-03-25T10:34:13.148+03:00 DEBUG 3796 --- [http-nio-8080-exec-2] com.fakel.service.MessageService         : Удаление 1 сообщений курсанта 1
+2026-03-25T10:34:13.164+03:00  INFO 3796 --- [http-nio-8080-exec-2] com.fakel.service.MessageService         : Успешно удалено 1 сообщений
+2026-03-25T10:38:00.679+03:00 ERROR 3796 --- [http-nio-8080-exec-8] c.f.exception.GlobalExceptionHandler     : Необработанная ошибка: Required request parameter 'dateFrom' for method parameter type LocalDate is not present
+
+org.springframework.web.bind.MissingServletRequestParameterException: Required request parameter 'dateFrom' for method parameter type LocalDate is not present
+	at org.springframework.web.method.annotation.RequestParamMethodArgumentResolver.handleMissingValueInternal(RequestParamMethodArgumentResolver.java:220) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.method.annotation.RequestParamMethodArgumentResolver.handleMissingValue(RequestParamMethodArgumentResolver.java:196) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:125) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:227) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:181) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.39.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.39.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at com.fakel.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:57) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:243) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:238) ~[spring-security-config-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1743) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at java.base/java.lang.Thread.run(Thread.java:1447) ~[na:na]
+
+2026-03-25T10:38:24.191+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Начало генерации отчета по тренировкам: cadetId=1, from=2026-02-01, to=2026-02-28, types=null
+2026-03-25T10:38:24.192+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Поиск курсанта по ID: 1
+2026-03-25T10:38:24.195+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : ФИО курсанта: Иванов Иван Иванович
+2026-03-25T10:38:24.196+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Группа курсанта: 1
+2026-03-25T10:38:24.196+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Университет: Белорусский государственный университет информатики и радиоэлектроники
+2026-03-25T10:38:24.196+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Получение сводной статистики от analyticsService
+2026-03-25T10:38:24.196+03:00  INFO 3796 --- [http-nio-8080-exec-10] c.f.service.TrainingAnalyticsService     : Получение сводной статистики: cadetId=1, from=2026-02-01, to=2026-02-28, types=null
+2026-03-25T10:38:24.225+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] c.f.service.TrainingAnalyticsService     : Получено 12 тренировок из репозитория
+2026-03-25T10:38:24.361+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] c.f.service.TrainingAnalyticsService     : Среднее количество тренировок в неделю: 3.0
+2026-03-25T10:38:24.362+03:00  INFO 3796 --- [http-nio-8080-exec-10] c.f.service.TrainingAnalyticsService     : Сводная статистика: тренировок=12, дней=28, тоннаж=515.0, подходов=110
+2026-03-25T10:38:24.362+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Сводная статистика получена: {totalTrainings=12, avgTrainingsPerWeek=3.0, totalTonnage=515.0, totalDays=28, totalApproaches=110, byType={Выносливость=4, Скорость=4, Сила=4}}
+2026-03-25T10:38:24.362+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Получение данных о весе
+2026-03-25T10:38:24.362+03:00  INFO 3796 --- [http-nio-8080-exec-10] c.f.service.TrainingAnalyticsService     : Получение прогресса веса: cadetId=1, from=2026-02-01, to=2026-02-28
+2026-03-25T10:38:24.432+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] c.f.service.TrainingAnalyticsService     : Получено 12 строк из репозитория
+2026-03-25T10:38:24.433+03:00  INFO 3796 --- [http-nio-8080-exec-10] c.f.service.TrainingAnalyticsService     : Найдено 12 записей о весе
+2026-03-25T10:38:24.433+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] c.f.service.TrainingAnalyticsService     : Успешно обработано 12 строк из 12
+2026-03-25T10:38:24.433+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Данные о весе получены, количество записей: 12
+2026-03-25T10:38:24.433+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Создание графика веса (12 точек данных)
+2026-03-25T10:38:24.433+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика динамики веса
+2026-03-25T10:38:24.434+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Количество записей о весе: 12
+2026-03-25T10:38:24.444+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика веса с 12 точками данных
+2026-03-25T10:38:24.811+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Диапазон оси Y: 75.5 - 75.5
+2026-03-25T10:38:24.813+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для 12 точек
+2026-03-25T10:38:24.813+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : График динамики веса успешно создан
+2026-03-25T10:38:24.813+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : График веса успешно создан
+2026-03-25T10:38:24.814+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Получение данных об упражнениях
+2026-03-25T10:38:24.814+03:00  INFO 3796 --- [http-nio-8080-exec-10] c.f.service.TrainingAnalyticsService     : Получение прогресса по упражнениям: cadetId=1, from=2026-02-01, to=2026-02-28, types=null
+2026-03-25T10:38:24.820+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] c.f.service.TrainingAnalyticsService     : Получено 12 тренировок из репозитория
+2026-03-25T10:38:24.823+03:00  INFO 3796 --- [http-nio-8080-exec-10] c.f.service.TrainingAnalyticsService     : Обработано тренировок: 12, упражнений: 33, подходов: 110
+2026-03-25T10:38:24.823+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] c.f.service.TrainingAnalyticsService     : Найдено 14 упражнений в результате
+2026-03-25T10:38:24.823+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Данные об упражнениях получены, количество упражнений: 14
+2026-03-25T10:38:24.824+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Создание графиков упражнений
+2026-03-25T10:38:24.826+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика упражнения: Бег на 60 метров
+2026-03-25T10:38:24.826+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Количество параметров: 1
+2026-03-25T10:38:24.826+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Время (сек)' с 2 точками данных
+2026-03-25T10:38:24.828+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Время (сек)' с 2 точками
+2026-03-25T10:38:24.828+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика с 1 сериями данных
+2026-03-25T10:38:24.828+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Подпись оси Y: Время (сек)
+2026-03-25T10:38:24.831+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Автонастройка диапазона Y: 8.4 - 8.5
+2026-03-25T10:38:24.831+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Время (сек)
+2026-03-25T10:38:24.832+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : График для упражнения 'Бег на 60 метров' успешно создан
+2026-03-25T10:38:24.832+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика упражнения: Семенящий бег
+2026-03-25T10:38:24.832+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Количество параметров: 1
+2026-03-25T10:38:24.832+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Время (сек)' с 2 точками данных
+2026-03-25T10:38:24.832+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Время (сек)' с 2 точками
+2026-03-25T10:38:24.832+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика с 1 сериями данных
+2026-03-25T10:38:24.832+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Подпись оси Y: Время (сек)
+2026-03-25T10:38:24.834+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Автонастройка диапазона Y: 7.7 - 8.0
+2026-03-25T10:38:24.834+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Время (сек)
+2026-03-25T10:38:24.834+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : График для упражнения 'Семенящий бег' успешно создан
+2026-03-25T10:38:24.834+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика упражнения: Челночный бег 6х10 метров
+2026-03-25T10:38:24.834+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Количество параметров: 1
+2026-03-25T10:38:24.834+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Время (сек)' с 2 точками данных
+2026-03-25T10:38:24.835+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Время (сек)' с 2 точками
+2026-03-25T10:38:24.835+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика с 1 сериями данных
+2026-03-25T10:38:24.835+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Подпись оси Y: Время (сек)
+2026-03-25T10:38:24.837+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Автонастройка диапазона Y: 14.8 - 15.0
+2026-03-25T10:38:24.837+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Время (сек)
+2026-03-25T10:38:24.837+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : График для упражнения 'Челночный бег 6х10 метров' успешно создан
+2026-03-25T10:38:24.837+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика упражнения: Отжимания от пола классические
+2026-03-25T10:38:24.837+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Количество параметров: 1
+2026-03-25T10:38:24.837+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Повторения' с 3 точками данных
+2026-03-25T10:38:24.838+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Повторения' с 3 точками
+2026-03-25T10:38:24.838+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика с 1 сериями данных
+2026-03-25T10:38:24.838+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Подпись оси Y: Повторения
+2026-03-25T10:38:24.839+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Автонастройка диапазона Y: 10.0 - 15.0
+2026-03-25T10:38:24.840+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Повторения
+2026-03-25T10:38:24.840+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : График для упражнения 'Отжимания от пола классические' успешно создан
+2026-03-25T10:38:24.840+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика упражнения: Жим штанги лежа
+2026-03-25T10:38:24.840+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Количество параметров: 2
+2026-03-25T10:38:24.840+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Вес (кг)' с 3 точками данных
+2026-03-25T10:38:24.841+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Вес (кг)' с 3 точками
+2026-03-25T10:38:24.841+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Повторения' с 3 точками данных
+2026-03-25T10:38:24.841+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Повторения' с 3 точками
+2026-03-25T10:38:24.841+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика с 2 сериями данных
+2026-03-25T10:38:24.841+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Несколько типов параметров, используется 'Значение'
+2026-03-25T10:38:24.845+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Автонастройка диапазона Y: 8.0 - 50.0
+2026-03-25T10:38:24.845+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Вес (кг)
+2026-03-25T10:38:24.845+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Повторения
+2026-03-25T10:38:24.845+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : График для упражнения 'Жим штанги лежа' успешно создан
+2026-03-25T10:38:24.846+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика упражнения: Прыжки на скакалке
+2026-03-25T10:38:24.846+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Количество параметров: 2
+2026-03-25T10:38:24.846+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'прыжки' с 4 точками данных
+2026-03-25T10:38:24.846+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'прыжки' с 4 точками
+2026-03-25T10:38:24.846+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Длительность (мин)' с 4 точками данных
+2026-03-25T10:38:24.846+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Длительность (мин)' с 4 точками
+2026-03-25T10:38:24.846+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика с 2 сериями данных
+2026-03-25T10:38:24.846+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Несколько типов параметров, используется 'Значение'
+2026-03-25T10:38:24.848+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Автонастройка диапазона Y: 15.0 - 2100.0
+2026-03-25T10:38:24.848+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии прыжки
+2026-03-25T10:38:24.849+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Длительность (мин)
+2026-03-25T10:38:24.849+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : График для упражнения 'Прыжки на скакалке' успешно создан
+2026-03-25T10:38:24.849+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика упражнения: Равномерный бег
+2026-03-25T10:38:24.849+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Количество параметров: 2
+2026-03-25T10:38:24.849+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Длительность (мин)' с 4 точками данных
+2026-03-25T10:38:24.850+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Длительность (мин)' с 4 точками
+2026-03-25T10:38:24.850+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Дистанция (м)' с 4 точками данных
+2026-03-25T10:38:24.850+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Дистанция (м)' с 4 точками
+2026-03-25T10:38:24.850+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика с 2 сериями данных
+2026-03-25T10:38:24.851+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Несколько типов параметров, используется 'Значение'
+2026-03-25T10:38:24.853+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Автонастройка диапазона Y: 600.0 - 5000.0
+2026-03-25T10:38:24.853+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Длительность (мин)
+2026-03-25T10:38:24.853+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Дистанция (м)
+2026-03-25T10:38:24.854+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : График для упражнения 'Равномерный бег' успешно создан
+2026-03-25T10:38:24.854+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика упражнения: Бег на 100 метров
+2026-03-25T10:38:24.854+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Количество параметров: 1
+2026-03-25T10:38:24.854+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Время (сек)' с 2 точками данных
+2026-03-25T10:38:24.855+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Время (сек)' с 2 точками
+2026-03-25T10:38:24.855+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика с 1 сериями данных
+2026-03-25T10:38:24.855+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Подпись оси Y: Время (сек)
+2026-03-25T10:38:24.857+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Автонастройка диапазона Y: 13.8 - 14.0
+2026-03-25T10:38:24.857+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Время (сек)
+2026-03-25T10:38:24.857+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : График для упражнения 'Бег на 100 метров' успешно создан
+2026-03-25T10:38:24.857+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика упражнения: Бег на 30 метров
+2026-03-25T10:38:24.857+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Количество параметров: 1
+2026-03-25T10:38:24.857+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Время (сек)' с 2 точками данных
+2026-03-25T10:38:24.858+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Время (сек)' с 2 точками
+2026-03-25T10:38:24.858+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика с 1 сериями данных
+2026-03-25T10:38:24.858+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Подпись оси Y: Время (сек)
+2026-03-25T10:38:24.860+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Автонастройка диапазона Y: 4.1 - 4.2
+2026-03-25T10:38:24.860+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Время (сек)
+2026-03-25T10:38:24.860+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : График для упражнения 'Бег на 30 метров' успешно создан
+2026-03-25T10:38:24.860+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика упражнения: Подъем переворотом на перекладине
+2026-03-25T10:38:24.860+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Количество параметров: 1
+2026-03-25T10:38:24.860+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Повторения' с 2 точками данных
+2026-03-25T10:38:24.860+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Повторения' с 2 точками
+2026-03-25T10:38:24.860+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика с 1 сериями данных
+2026-03-25T10:38:24.860+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Подпись оси Y: Повторения
+2026-03-25T10:38:24.861+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Автонастройка диапазона Y: 4.0 - 5.0
+2026-03-25T10:38:24.863+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Повторения
+2026-03-25T10:38:24.863+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : График для упражнения 'Подъем переворотом на перекладине' успешно создан
+2026-03-25T10:38:24.864+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика упражнения: Подтягивания прямым хватом, средние
+2026-03-25T10:38:24.864+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Количество параметров: 1
+2026-03-25T10:38:24.864+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Обработка параметра 'Повторения' с 4 точками данных
+2026-03-25T10:38:24.864+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлен параметр 'Повторения' с 4 точками
+2026-03-25T10:38:24.864+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Создание графика с 1 сериями данных
+2026-03-25T10:38:24.864+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Подпись оси Y: Повторения
+2026-03-25T10:38:24.866+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Автонастройка диапазона Y: 5.0 - 10.0
+2026-03-25T10:38:24.866+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : Добавлены подписи для серии Повторения
+2026-03-25T10:38:24.866+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ChartService           : График для упражнения 'Подтягивания прямым хватом, средние' успешно создан
+2026-03-25T10:38:24.867+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Создано 11 графиков упражнений, пропущено 3
+2026-03-25T10:38:24.867+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : Генерация PDF отчета через PdfService
+2026-03-25T10:38:24.867+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.PdfService             : Начало генерации PDF отчета для курсанта ID: 1
+2026-03-25T10:38:24.867+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.PdfService             : Параметры отчета: cadetName=Иванов Иван Иванович, groupNumber=1, universityName=Белорусский государственный университет информатики и радиоэлектроники, from=2026-02-01, to=2026-02-28, reportTypes=[]
+2026-03-25T10:38:24.867+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.PdfService             : Наличие графиков: weightChart=true, exerciseCharts size=11
+2026-03-25T10:38:25.156+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.PdfService             : Начало построения документа PDF
+2026-03-25T10:38:25.271+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.PdfService             : Добавление сводной информации, размер summary: 6
+2026-03-25T10:38:25.280+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.PdfService             : Добавление статистики по типам тренировок: {Выносливость=4, Скорость=4, Сила=4}
+2026-03-25T10:38:25.306+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.PdfService             : Добавление графика веса
+2026-03-25T10:38:26.052+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.PdfService             : График веса успешно добавлен
+2026-03-25T10:38:26.053+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.PdfService             : Добавление графиков упражнений, количество: 11
+2026-03-25T10:38:26.670+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.PdfService             : Добавление графиков завершено: успешно 11, ошибок 0
+2026-03-25T10:38:26.679+03:00 DEBUG 3796 --- [http-nio-8080-exec-10] com.fakel.service.PdfService             : Документ PDF закрыт
+2026-03-25T10:38:26.680+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.PdfService             : PDF отчет успешно сгенерирован, размер: 154919 байт
+2026-03-25T10:38:26.680+03:00  INFO 3796 --- [http-nio-8080-exec-10] com.fakel.service.ReportService          : PDF отчет успешно сгенерирован, размер: 154919 байт
+2026-03-25T10:39:27.671+03:00  INFO 3796 --- [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-25T10:39:27.688+03:00  INFO 3796 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-03-25T10:39:27.695+03:00  INFO 3796 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-25T10:39:27.698+03:00  INFO 3796 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-03-25T10:39:27.703+03:00  INFO 3796 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
